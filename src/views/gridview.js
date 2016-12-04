@@ -189,8 +189,6 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
     Filter: function (dzTiles, currentFilter, sortFacet, stringFacets, changingView, changeViewSelectedItem) {
         var that = this;
         var changingFromNonTileView = false;
-        if (!Modernizr.canvas)
-            return;
 
         Debug.Log('Grid View Filtered: ' + currentFilter.length);
 
@@ -335,10 +333,7 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
         this.init = false;
     },
     GetUI: function () {
-        if (Modernizr.canvas)
-            return "";
-        else
-            return "<div class='pv-viewpanel-unabletodisplay'><h2>Unfortunately this view is unavailable as your browser does not support this functionality.</h2>Please try again with one of the following supported browsers: IE 9+, Chrome 4+, Firefox 2+, Safari 3.1+, iOS Safari 3.2+, Opera 9+<br/><a href='http://caniuse.com/#feat=canvas'>http://caniuse.com/#feat=canvas</a></div>";
+        return "";
     },
     GetButtonImage: function () {
         return 'images/GridView.png';

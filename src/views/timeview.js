@@ -37,8 +37,6 @@ PivotViewer.Views.TimeView = PivotViewer.Views.IPivotViewerView.subClass({
     },
     Filter: function (dzTiles, currentFilter, sortFacet, stringFacets, changingView, selectedItem) { 
         var that = this;
-        if (!Modernizr.canvas)
-            return;
 
         Debug.Log('Timeline View Filtered: ' + currentFilter.length);
 
