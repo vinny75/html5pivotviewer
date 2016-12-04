@@ -27,12 +27,12 @@ jQuery UI
 
 
 jQuery Mouse Wheel Plugin
-<https://github.com/brandonaaron/jquery-mousewheel>
+<https://github.com/jquery/jquery-mousewheel>
 
     A jQuery plugin that adds cross-browser mouse wheel support.
 
     This plugin is licensed under the MIT License.
-    <https://github.com/brandonaaron/jquery-mousewheel/blob/master/LICENSE.txt>
+    <https://github.com/jquery/jquery-mousewheel/blob/master/LICENSE.txt>
 
 
 EasingJS
