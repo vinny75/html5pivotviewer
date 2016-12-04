@@ -2,8 +2,9 @@ var gulp = require('gulp');
 var concat = require('gulp-concat');  
 var rename = require('gulp-rename');  
 var uglify = require('gulp-uglify');
+var cleanCSS = require('gulp-clean-css');
 
-var src = [
+var jsSrc = [
 	'./src/namespaces.js',
 	'./src/pubsub.js',
 	'./src/utils.js',
@@ -27,15 +28,30 @@ var src = [
 	'./src/pivotviewer.js'
 ];
 
-var dest = './dist/js';
+var jsDest = './dist/js';
+
+var cssSrc = [
+	'./style/pivotviewer.css'
+];
+
+var cssDest = './dist/css';
 
 gulp.task('scripts', function() {  
-    return gulp.src(src)
+    return gulp.src(jsSrc)
         .pipe(concat('pivotviewer.js'))
-        .pipe(gulp.dest(dest))
+        .pipe(gulp.dest(jsDest))
         .pipe(rename('pivotviewer.min.js'))
         .pipe(uglify())
-        .pipe(gulp.dest(dest));		
+        .pipe(gulp.dest(jsDest));		
+});
+
+gulp.task('style', function() {  
+    return gulp.src(cssSrc)
+        .pipe(concat('pivotviewer.css'))
+        .pipe(gulp.dest(cssDest))
+        .pipe(rename('pivotviewer.min.css'))
+        .pipe(cleanCSS())
+        .pipe(gulp.dest(cssDest));		
 });
 
 gulp.task('serve', function () {
@@ -46,4 +62,4 @@ var express = require('express');
 	app.listen(3000); 
 });
 
-gulp.task('default', ['scripts']);
+gulp.task('default', ['scripts', 'style']);

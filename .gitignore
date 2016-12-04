@@ -1,11 +1,9 @@
 #
 # node files
 #
-
 node_modules
 
 #
 #  Compiled files
 #
-pivotviewer.js
-pivotviewer.min.js
+dist
