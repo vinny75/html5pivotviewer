@@ -8,14 +8,13 @@
 }
 .pv-loading {
 	width: 89px;
-	height: 66px;
-	font-family: Tahoma, Sans-Serif;
+	height: 35px;
 	position: absolute;
+	background: url('../images/loading.gif') 0px 0px no-repeat;
 }
 .pv-loading span {
-	position: absolute;
-	top: 66px;
-	left: 23px;
+	padding-left: 37px;
+	line-height: 35px;
 }
 .pv-toolbarpanel {
 	height: 22px;

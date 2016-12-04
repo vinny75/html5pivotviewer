@@ -3,6 +3,7 @@ var concat = require('gulp-concat');
 var rename = require('gulp-rename');  
 var uglify = require('gulp-uglify');
 var cleanCSS = require('gulp-clean-css');
+var imagemin = require('gulp-imagemin');
 
 var jsSrc = [
 	'./src/namespaces.js',
@@ -37,6 +38,8 @@ var cssSrc = [
 
 var cssDest = './dist/css';
 
+var imgDest = './dist/images';
+
 gulp.task('scripts', function() {  
     return gulp.src(jsSrc)
         .pipe(concat('pivotviewer.js'))
@@ -55,6 +58,12 @@ gulp.task('style', function() {
         .pipe(gulp.dest(cssDest));		
 });
 
+gulp.task('images', function() {  
+    return gulp.src('./images/*')
+        .pipe(imagemin())
+        .pipe(gulp.dest(imgDest));		
+});
+
 gulp.task('serve', function () {
 var express = require('express'); 
 	var serveStatic = require('serve-static'); 
@@ -63,4 +72,4 @@ var express = require('express');
 	app.listen(3000); 
 });
 
-gulp.task('default', ['scripts', 'style']);
+gulp.task('default', ['scripts', 'style', 'images']);

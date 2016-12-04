@@ -39,7 +39,7 @@ PivotViewer.Views.TableView = PivotViewer.Views.IPivotViewerView.subClass({
         this.currentOffsetX = this.offsetX;
         this.currentOffsetY = this.offsetY;
 
-        $('.pv-viewpanel').append("<div style='visibility:hidden;position:relative;' id='pv-table-loader'><img src='images/loading.gif'></img></div>");
+        $('.pv-viewpanel').append("<div id='pv-table-loader' class='pv-loading'><span>Loading...</span></div>");
         $('#pv-table-loader').css('top', (this.height / 2) - 33 +'px');
         $('#pv-table-loader').css('left', (this.width / 2) - 43 +'px');
     },
