@@ -1854,11 +1854,11 @@
                 }
 
                 if (IsMetaDataVisible) {
-                    detailDOM[detailDOMIndex] = "<div class='pv-infopanel-detail " + (alternate ? "detail-dark" : "detail-light") + "'><div class='pv-infopanel-detail-item detail-item-title' pv-detail-item-title='" + selectedItem.Facets[i].Name + "'>" + selectedItem.Facets[i].Name + "</div>";
+                    detailDOM[detailDOMIndex] = "<div class='pv-infopanel-detail " + (alternate ? "pv-detail-dark" : "pv-detail-light") + "'><div class='pv-infopanel-detail-item pv-detail-item-title' pv-detail-item-title='" + selectedItem.Facets[i].Name + "'>" + selectedItem.Facets[i].Name + "</div>";
                     for (var j = 0; j < selectedItem.Facets[i].FacetValues.length; j++) {
-                        detailDOM[detailDOMIndex] += "<div pv-detail-item-value='" + selectedItem.Facets[i].FacetValues[j].Value + "' class='pv-infopanel-detail-item detail-item-value" + (IsFilterVisible ? " detail-item-value-filter" : "") + "'>";
+                        detailDOM[detailDOMIndex] += "<div pv-detail-item-value='" + selectedItem.Facets[i].FacetValues[j].Value + "' class='pv-infopanel-detail-item pv-detail-item-value" + (IsFilterVisible ? " pv-detail-item-value-filter" : "") + "'>";
                         if (selectedItem.Facets[i].FacetValues[j].Href != null)
-                            detailDOM[detailDOMIndex] += "<a class='detail-item-link' href='" + selectedItem.Facets[i].FacetValues[j].Href + "'>" + selectedItem.Facets[i].FacetValues[j].Value + "</a>";
+                            detailDOM[detailDOMIndex] += "<a class='pv-detail-item-link' href='" + selectedItem.Facets[i].FacetValues[j].Href + "'>" + selectedItem.Facets[i].FacetValues[j].Value + "</a>";
                         else
                             detailDOM[detailDOMIndex] += selectedItem.Facets[i].FacetValues[j].Value;
                         detailDOM[detailDOMIndex] += "</div>";

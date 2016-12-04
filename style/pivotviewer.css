@@ -412,28 +412,28 @@
 	position: absolute;
 	bottom: 0;
 }
-.detail-dark {
+.pv-detail-dark {
 	background-color: #E0E1E2;
 }
-.detail-light {
+.pv-detail-light {
 	background-color: #EEEFF0;
 }
-.detail-item-title {
+.pv-detail-item-title {
 	color: #05314A;
 	margin-bottom: 5px;
 }
-.detail-item-value {
+.pv-detail-item-value {
 	color: #484848;
 	padding: 2px 0px 2px 0px;
 }
-.detail-item-value-filter {
+.pv-detail-item-value-filter {
 	color: #36A3D8;
 	cursor: default;
 }
-.detail-item-value-filter:hover {
+.pv-detail-item-value-filter:hover {
 	background-color: #C9DFEA;
 }
-.detail-item-link {
+.pv-detail-item-link {
 	color: #36A3D8;
 	text-decoration: none;
 }
@@ -477,13 +477,13 @@
 	white-space: nowrap;
 	z-index: 25;
 }
-.graphview-bucket-dark {
+.pv-graphview-bucket-dark {
 	background-color: #E6E8ED;
 }
-.graphview-bucket-light {
+.pv-graphview-bucket-light {
 	background-color: #EBEDF1;
 }
-.graphview-bucket-hover {
+.pv-graphview-bucket-hover {
 	background-color: #DCECF4;
 }
 .pv-tableview-table {
