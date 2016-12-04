@@ -1,4 +1,9 @@
 #
+# node files
+#
+
+node_modules
+#
 #  Personal files
 #
 .profile.sysdep
