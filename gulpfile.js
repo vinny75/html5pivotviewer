@@ -70,6 +70,9 @@ var express = require('express');
 	var app = express(); 
 	app.use(serveStatic(__dirname)); 
 	app.listen(3000); 
+	
+	gulp.watch('./src/**/*.js', ['scripts']);
+	gulp.watch('./style/*.css', ['style']);
 });
 
 gulp.task('default', ['scripts', 'style', 'images']);
