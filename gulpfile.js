@@ -31,7 +31,8 @@ var jsSrc = [
 var jsDest = './dist/js';
 
 var cssSrc = [
-	'./style/pivotviewer.css'
+	'./style/pivotviewer.css',
+	'./style/jquery-ui.overrides.css'
 ];
 
 var cssDest = './dist/css';
