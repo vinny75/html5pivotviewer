@@ -78,8 +78,7 @@ PivotViewer.Views.SimpleImageController = PivotViewer.Views.IImageController.sub
             msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
             msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
             msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-            $('.pv-wrapper').append("<div id=\"pv-imageloading-error\" class=\"pv-modal-dialog\"><div><a href=\"#pv-modal-dialog-close\" title=\"Close\" class=\"pv-modal-dialog-close\">X</a><h2>HTML5 PivotViewer</h2><p>" + msg + "</p></div></div>");
-            var t=setTimeout(function(){window.open("#pv-imageloading-error","_self")},1000)
+            PivotViewer.Utils.ModalDialog(msg); 
         });
     },
 

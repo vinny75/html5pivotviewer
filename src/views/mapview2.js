@@ -588,9 +588,7 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                       msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
                       msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
                       msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                      $('.pv-wrapper').append("<div id=\"pv-dzloading-error\" class=\"pv-modal-dialog\"><div><a href=\"#pv-modal-dialog-close\" title=\"Close\" class=\"pv-modal-dialog-close\">X</a><h2>HTML5 PivotViewer</h2><p>"+ msg + "</p></div></div>");
-                     var t=setTimeout(function(){window.open("#pv-dzloading-error","_self")},1000)
-  
+                      PivotViewer.Utils.ModalDialog(msg); 
                 }
             });
         }
@@ -900,8 +898,7 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
         var msg = '';
         msg = msg + 'The current data selection does not contain any location information that can be shown on a map<br><br>';
         msg = msg + '<br>Choose a different view<br>';
-        $('.pv-wrapper').append("<div id=\"pv-dzlocation-error\" class=\"pv-modal-dialog\"><div><a href=\"#pv-modal-dialog-close\" title=\"Close\" class=\"pv-modal-dialog-close\">X</a><h2>HTML5 PivotViewer</h2><p>" + msg + "</p></div></div>");
-        var t=setTimeout(function(){window.open("#pv-dzlocation-error","_self")},1000)
+        PivotViewer.Utils.ModalDialog(msg); 
         return;
     },
     GetMapCentreX: function () {

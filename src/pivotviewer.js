@@ -215,8 +215,7 @@
                     //Make sure throbber is removed else everyone thinks the app is still running
                     $('.pv-loading').remove();
 
-                    $('.pv-wrapper').append("<div id=\"pv-loading-error\" class=\"pv-modal-dialog\"><div><a href=\"#pv-modal-dialog-close\" title=\"Close\" class=\"pv-modal-dialog-close\">X</a><h2>HTML5 PivotViewer</h2><p>" + msg + "</p></div></div>");
-                    window.open("#pv-loading-error","_self")
+                    PivotViewer.Utils.ModalDialog(msg); 
                 }
  
                 //Image controller
@@ -791,8 +790,7 @@
                 } else {
                     var msg = '';
                     msg = msg + 'View does not inherit from PivotViewer.Views.IPivotViewerView<br>';
-                    $('.pv-wrapper').append("<div id=\"pv-view-error\" class=\"pv-modal-dialog\"><div><a href=\"#pv-modal-dialog-close\" title=\"Close\" class=\"pv-modal-dialog-close\">X</a><h2>HTML5 PivotViewer</h2><p>" + msg + "</p></div></div>");
-                    window.open("#pv-view-error","_self")
+                    PivotViewer.Utils.ModalDialog(msg); 
                 }
             } catch (ex) { alert(ex.Message); }
         }
@@ -833,8 +831,7 @@
         if (viewNumber == 3 && _mapService == "Google" && !_googleAPIKey) {
             var msg = '';
             msg = msg + 'Viewing the data on Google maps requires an API key. This can be obtained from <a href=\"https://code.google.com/apis/console/?noredirect\" target=\"_blank\">here</a>';
-            $('.pv-wrapper').append("<div id=\"pv-nomapkey-error\" class=\"pv-modal-dialog\"><div><a href=\"#pv-modal-dialog-close\" title=\"Close\" class=\"pv-modal-dialog-close\">X</a><h2>HTML5 PivotViewer</h2><p>" + msg + "</p></div></div>");
-            var t=setTimeout(function(){window.open("#pv-nomapkey-error","_self")},1000)
+            PivotViewer.Utils.ModalDialog(msg); 
             return;
         }
 

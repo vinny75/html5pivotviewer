@@ -263,8 +263,7 @@ PivotViewer.Views.TimeView = PivotViewer.Views.IPivotViewerView.subClass({
         var msg = '';
         msg = msg + 'The current data selection does not contain any information that can be shown on a timeline<br><br>';
         msg = msg + '<br>Choose a different view<br>';
-        $('.pv-wrapper').append("<div id=\"pv-dzlocation-error\" class=\"pv-modal-dialog\"><div><a href=\"#pv-modal-dialog-close\" title=\"Close\" class=\"pv-modal-dialog-close\">X</a><h2>HTML5 PivotViewer</h2><p>" + msg + "</p></div></div>");
-        var t=setTimeout(function(){window.open("#pv-dzlocation-error","_self")},1000)
+        PivotViewer.Utils.ModalDialog(msg); 
         return;
     },
     RefreshView: function () {

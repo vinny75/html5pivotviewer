@@ -111,6 +111,22 @@ PivotViewer.Utils.Histogram = function (values) {
     return { Histogram: histogram, Min: min, Max: max, BinCount: bins, MaxCount: maxCount }; 
 };
 
+PivotViewer.Utils.ModalDialog = function(msg, title) {
+    $('<div id="pv-modal-dialog"></div>').dialog({
+        modal: true,
+        title: title ? title : 'HTML 5 PivotViewer',
+        open: function () {
+            $(this).html(msg);
+        },
+        buttons: {
+            Ok: function () {
+                $(this).dialog("close");
+                $("#pv-modal-dialog").remove();
+            }
+        }
+    }); //end confirm dialog
+};
+
 // A simple class creation library.
 // From Secrets of the JavaScript Ninja
 // Inspired by base2 and Prototype
