@@ -275,7 +275,7 @@
 
         //Apply ViewerState filters
         ApplyViewerState();
-        _initSelectedItem = GetItem(_viewerState.Selection);
+        _initSelectedItem = PivotCollection.GetItemById(_viewerState.Selection);
         _initTableFacet = _viewerState.TableFacet;
         _initMapCentreX = _viewerState.MapCentreX;
         _initMapCentreY = _viewerState.MapCentreY;
@@ -1663,14 +1663,6 @@
         return foundId;
     };
 
-    GetItem = function (itemId) {
-        for (var i = 0; i < PivotCollection.Items.length; i++) {
-            if (PivotCollection.Items[i].Id == itemId)
-                return PivotCollection.Items[i];
-        }
-        return null;
-    };
-
     UpdateBookmark = function ()
         {
             // CurrentViewerState
@@ -1800,7 +1792,7 @@
         }
 
         //if (evt.length > 0) {
-        var selectedItem = GetItem(evt.id);
+        var selectedItem = PivotCollection.GetItemById(evt.id);
         if (selectedItem != null) {
             var alternate = true;
             if ($('.pv-mapview-legend').is(":visible"))
