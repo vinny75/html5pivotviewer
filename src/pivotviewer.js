@@ -33,11 +33,6 @@
         _selectedItemBkt = 0,
         _initSelectedItem = "",
         _initTableFacet = "",
-        _initMapCentreX = "",
-        _initMapCentreY = "",
-        _initMapType = "",
-        _initMapZoom = "",
-        _initTimelineFacet = "",
         _handledInitSettings = false,
         _changeToTileViewSelectedItem = "",
         _currentSort = "",
@@ -47,11 +42,6 @@
         _viewerState = { View: null, Facet: null, Filters: [] },
         _self = null,
         _nameMapping = {},
-        _googleAPILoaded = false,
-        _googleAPIKey,
-        _mapService = "OpenStreetMap",
-        _geocodeService = "Nominatim",
-        _overlayBaseUrl = "",
         PivotCollection = new PivotViewer.Models.Collection();
 
     var methods = {
@@ -59,12 +49,6 @@
         // Loader: a loader that inherits from ICollectionLoader must be specified.  Currently the project only includes the CXMLLoader.  It takes the URL of the collection as a parameter.
         // ImageController: defaults to the DeepZoom image controller.
         // ViewerState: Sets the filters, selected item and chosen view when the PivotViewer first opens
-        // MapService: which map service to use.  This can be either Google or OpenStreetMap. 
-        // GeocodeService: which geocode service to use.  This can either be Google or Nominatim. 
-        // GoogleAPIKey: required to use the Google map or geocode service. 
-        // MapOverlay: option to add a WMS overlay to the map.  The base url of the WMS server should be
-        //   supplied without the bbox option e.g.
-        //     MapOverlay: http://maps.communities.gov.uk:8080/geoserver/eafloodareas/wms?service=WMS&version=1.1.0&request=GetMap&layers=FloodAlertsWarnings&styles=&srs=EPSG:4326&format=image%2Fjpeg
  
         init: function (options) {
             _self = this;
@@ -75,71 +59,6 @@
             //Load default options from "defaults" file
             $.getJSON("defaults")
             .always( function (defaultOptions) {
-
-                //Options Map Service
-                if (options.MapService == "Google" && options.GoogleAPIKey != undefined) {
-                   _googleAPIKey = options.GoogleAPIKey;
-                   _mapService = "Google";
-                } else if (options.MapService == "Google" && defaultOptions.GoogleAPIKey != undefined) {
-                   _googleAPIKey = defaultOptions.GoogleAPIKey;
-                   _mapService = "Google";
-                } else if (options.MapService == undefined && defaultOptions.MapService == "Google" && options.GoogleAPIKey != undefined) {
-                   _googleAPIKey = options.GoogleAPIKey;
-                   _mapService = "Google";
-                } else if (options.MapService == undefined && defaultOptions.MapService == "Google" && defaultOptions.GoogleAPIKey != undefined) {
-                   _googleAPIKey = defaultOptions.GoogleAPIKey;
-                   _mapService = "Google";
-                } else if (options.MapService == "Google" && options.GoogleAPIKey == undefined && defaultOptions.GoogleAPIKey == undefined) {
-                   _mapService = "OpenStreetMap";
-                   Debug.Log('Google maps selected but no API key supplied.  Reverting to OpenStreetMaps');
-                } else if (options.MapService == undefined && defaultOptions.MapService == "Google" && options.GoogleAPIKey == undefined && defaultOptions.GoogleAPIKey == undefined) {
-                   _mapService = "OpenStreetMap";
-                   Debug.Log('Google maps selected but no API key supplied.  Reverting to OpenStreetMaps');
-                } else
-                   _mapService = "OpenStreetMap";
- 
-                if ( _mapService == "Google") {
-                    // Load the google maps plugin for wicket
-                    var script = document.createElement("script");
-                    script.type = "text/javascript";
-                    script.src = "scripts/wicket-gmap3.min.js";
-                    document.body.appendChild(script);
-                } else {
-                    // Load the leaflets plugin for wicket
-                    var script = document.createElement("script");
-                    script.type = "text/javascript";
-                    script.src = "scripts/wicket-leaflet.min.js";
-                    document.body.appendChild(script);
-                }
- 
-                //Options Geocode Service
-                if (options.GeocodeService == "Google" && options.GoogleAPIKey != undefined) {
-                   _googleAPIKey = options.GoogleAPIKey;
-                   _geocodeService = "Google";
-                } else if (options.GeocodeService == "Google" && defaultOptions.GoogleAPIKey != undefined) {
-                   _googleAPIKey = defaultOptions.GoogleAPIKey;
-                   _geocodeService = "Google";
-                } else if (options.GeocodeService == undefined && defaultOptions.GeocodeService == "Google" && options.GoogleAPIKey != undefined) {
-                   _googleAPIKey = options.GoogleAPIKey;
-                   _geocodeService = "Google";
-                } else if (options.GeocodeService == undefined && defaultOptions.GeocodeService == "Google" && defaultOptions.GoogleAPIKey != undefined) {
-                   _googleAPIKey = defaultOptions.GoogleAPIKey;
-                   _geocodeService = "Google";
-                } else if (options.GeocodeService == "Google" && options.GoogleAPIKey == undefined && defaultOptions.GoogleAPIKey == undefined) {
-                   _geocodeService = "Nominatim";
-                   Debug.Log('Google geocode service selected but no API key supplied.  Reverting to Nominatim');
-                } else if (options.GeocodeService == undefined && defaultOptions.GeocodeService == "Google" && options.GoogleAPIKey == undefined && defaultOptions.GoogleAPIKey == undefined) {
-                   _geocodeService = "Nominatim";
-                   Debug.Log('Google geocode service selected but no API key supplied.  Reverting to Nominatim');
-                } else
-                   _geocodeService == "Nominatim";
- 
-                //Options map overlay
-                if (options.MapOverlay != undefined)
-                  _overlayBaseUrl = options.MapOverlay;
-                else if (defaultOptions.MapOverlay != undefined)
-                  _overlayBaseUrl = defaultOptions.MapOverlay;
- 
                 //ViewerState
                 //http://i2.silverlight.net/content/pivotviewer/developer-info/api/html/P_System_Windows_Pivot_PivotViewer_ViewerState.htm
                 if (options.ViewerState != undefined || defaultOptions.ViewerState != undefined) {
@@ -165,21 +84,6 @@
                             //Table Selected Facet
                             else if (splitItem[0] == '$tableFacet$')
                                 _viewerState.TableFacet = PivotViewer.Utils.EscapeItemId(splitItem[1]);
-                            //Map Centre X
-                            else if (splitItem[0] == '$mapCentreX$')
-                                _viewerState.MapCentreX = splitItem[1];
-                            //Map Centre Y
-                            else if (splitItem[0] == '$mapCentreY$')
-                                _viewerState.MapCentreY = splitItem[1];
-                            //Map Type
-                            else if (splitItem[0] == '$mapType$')
-                                _viewerState.MapType = PivotViewer.Utils.EscapeItemId(splitItem[1]);
-                            //Map Zoom
-                            else if (splitItem[0] == '$mapZoom$')
-                                _viewerState.MapZoom = PivotViewer.Utils.EscapeItemId(splitItem[1]);
-                            //Timeline Selected Facet
-                            else if (splitItem[0] == '$timelineFacet$')
-                                _viewerState.TimelineFacet = PivotViewer.Utils.EscapeItemId(splitItem[1]);
                             //Filters
                             else {
                                 var filter = { Facet: splitItem[0], Predicates: [] };
@@ -276,11 +180,6 @@
         ApplyViewerState();
         _initSelectedItem = PivotCollection.GetItemById(_viewerState.Selection);
         _initTableFacet = _viewerState.TableFacet;
-        _initMapCentreX = _viewerState.MapCentreX;
-        _initMapCentreY = _viewerState.MapCentreY;
-        _initMapType = _viewerState.MapType;
-        _initMapZoom = _viewerState.MapZoom;
-        _initTimelineFacet = _viewerState.TimelineFacet;
 
         //Set the width for displaying breadcrumbs as we now know the control sizes 
         //Hardcoding the value for the width of the viewcontrols images (145=29*5) as the webkit browsers 
@@ -304,18 +203,6 @@
         //Begin tile animation
         var id = (_initSelectedItem && _initSelectedItem.Id) ? _initSelectedItem.Id : "";
         _tileController.BeginAnimation(true, id);
-
-        // If Map view apply initial selection here
-        if (_currentView == 3) {  
-            if (_initSelectedItem) {
-                $.publish("/PivotViewer/Views/Item/Selected", [{id: _initSelectedItem.Id, bkt: 0}]);
-                _views[3].RedrawMarkers(_initSelectedItem.Id);
-            } else {
-                $.publish("/PivotViewer/Views/Item/Selected", [{id: "", bkt: 0}]);
-                _views[3].RedrawMarkers("");
-            }
-        }
-
     };
 
     InitUI = function () {
@@ -328,8 +215,6 @@
         toolbarPanel += "<span class='pv-toolbarpanel-name'>" + PivotCollection.CollectionName + "</span>";
         toolbarPanel += "<div class='pv-toolbarpanel-facetbreadcrumb'></div>";
         toolbarPanel += "<div class='pv-toolbarpanel-zoomcontrols'><div class='pv-toolbarpanel-zoomslider'></div>";
-        toolbarPanel += "<div class='pv-toolbarpanel-timelineselector'></div>";
-        toolbarPanel += "<div class='pv-toolbarpanel-maplegend'></div></div>";
         toolbarPanel += "<div class='pv-toolbarpanel-viewcontrols'></div>";
         toolbarPanel += "<div class='pv-toolbarpanel-sortcontrols'></div>";
         toolbarPanel += "</div>";
@@ -359,14 +244,6 @@
  
         //add grid for tableview to the mainpanel
         $('.pv-viewpanel').append("<div class='pv-tableview-table' id='pv-table'></div>");
-
-        //add canvas for map to the mainpanel
-        $('.pv-viewpanel').append("<div class='pv-mapview-canvas' id='pv-map-canvas'></div>");
-        //add map legend 
-        $('.pv-mainpanel').append("<div class='pv-mapview-legend' id='pv-map-legend'></div>");
-
-        //add canvas for timeline to the mainpanel
-        $('.pv-viewpanel').append("<div class='pv-timeview-canvas' id='pv-time-canvas'></div>");
 
         //filter panel
         var filterPanel = $('.pv-filterpanel');
@@ -399,9 +276,6 @@
             infoPanel.append("<div class='pv-infopanel-copyright'><a href=\"" + PivotCollection.CopyrightHref + "\" target=\"_blank\">" + PivotCollection.CopyrightName + "</a></div>");
         }
         infoPanel.hide();
-        //position the map legend panel
-        $('.pv-mapview-legend').css('left', (($('.pv-mainpanel').offset().left + $('.pv-mainpanel').width()) - 205) + 'px')
-            .css('height', mainPanelHeight - 28 + 'px');
     };
 
     //Creates facet list for the filter panel
@@ -774,11 +648,6 @@
         _views.push(new PivotViewer.Views.GridView());
         _views.push(new PivotViewer.Views.GraphView());
         _views.push(new PivotViewer.Views.TableView());
-        if (_mapService == "Google")
-          _views.push(new PivotViewer.Views.MapView());
-        else
-          _views.push(new PivotViewer.Views.MapView2());
-        _views.push(new PivotViewer.Views.TimeView());
 
         //init the views interfaces
         for (var i = 0; i < _views.length; i++) {
@@ -795,46 +664,13 @@
             } catch (ex) { alert(ex.Message); }
         }
 
-       // The table, graph and the map view needs to know about the facet categories
+       // The table, graph view needs to know about the facet categories
        _views[1].SetFacetCategories(PivotCollection);
        _views[2].SetFacetCategories(PivotCollection);
-       _views[3].SetFacetCategories(PivotCollection);
-       _views[4].SetFacetCategories(PivotCollection);
-
-       // Set which geocode service should be used by the map view
-       _views[3].SetGeocodeService(_geocodeService);
-       // Set map overlay url
-       if (_overlayBaseUrl != "") 
-           _views[3].SetOverlayBaseUrl(_overlayBaseUrl);
     }
-
-    /// Google API has loaded
-    global.setMapReady = function () {
-        _googleAPILoaded = true;
-        SelectView(3, true);
-    };
 
     /// Set the current view
     SelectView = function (viewNumber, init) {
-
-        // If changing to map view and the Google API has not yet loaded,
-        // load it now.
-        if (viewNumber == 3 && (_mapService == "Google" || _geocodeService == "Google") && !_googleAPILoaded && _googleAPIKey) {
-            // Load the google maps api
-            var script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = "https://maps.googleapis.com/maps/api/js?key=" + _googleAPIKey + "&sensor=false&callback=global.setMapReady";
-            document.body.appendChild(script);
-            return;
-        }
-        
-        if (viewNumber == 3 && _mapService == "Google" && !_googleAPIKey) {
-            var msg = '';
-            msg = msg + 'Viewing the data on Google maps requires an API key. This can be obtained from <a href=\"https://code.google.com/apis/console/?noredirect\" target=\"_blank\">here</a>';
-            PivotViewer.Utils.ModalDialog(msg); 
-            return;
-        }
-
         //Deselect all views
         for (var i = 0; i < _views.length; i++) {
             if (viewNumber != i) {
@@ -1316,23 +1152,13 @@
             if (_currentView == 2) { 
                 _views[_currentView].SetSelectedFacet(_initTableFacet);
                 _views[_currentView].Filter(_tiles, filterItems, sort, stringFacets, changingView, _initSelectedItem);
-            } else if (_currentView == 3) {
-                _views[_currentView].SetMapInitCentreX(_initMapCentreX);
-                _views[_currentView].SetMapInitCentreY(_initMapCentreY);
-                _views[_currentView].SetMapInitType(_initMapType);
-                _views[_currentView].SetMapInitZoom(_initMapZoom);
-                _views[_currentView].applyBookmark = true;
-                _views[_currentView].Filter(_tiles, filterItems, sort, stringFacets, changingView, _initSelectedItem);
-            } else if (_currentView == 4) {
-                _views[_currentView].SetSelectedFacet(_initTimelineFacet);
-                _views[_currentView].Filter(_tiles, filterItems, sort, stringFacets, changingView, _initSelectedItem);
             } else 
                 _views[_currentView].Filter(_tiles, filterItems, sort, stringFacets, changingView, _selectedItem);
             _handledInitSettings = true;
         }
         else {
             _views[_currentView].Filter(_tiles, filterItems, sort, stringFacets, changingView, _selectedItem);
-            if ((_currentView == 2 || _currentView == 3 || _currentView == 4) && !changingView) { 
+            if ((_currentView == 2) && !changingView) { 
                 _views[0].Filter(_tiles, filterItems, sort, stringFacets, false, "");
             }
         }
@@ -1679,19 +1505,7 @@
             if (_currentView == 2)
                 if (_views[_currentView].GetSelectedFacet())
 	    	  currentViewerState += "&$tableFacet$=" + _views[_currentView].GetSelectedFacet();
-            if (_currentView == 3) {
-                if (_views[_currentView].GetMapCentreX())
-	    	  currentViewerState += "&$mapCentreX$=" + _views[_currentView].GetMapCentreX();
-                if (_views[_currentView].GetMapCentreY())
-	    	  currentViewerState += "&$mapCentreY$=" + _views[_currentView].GetMapCentreY();
-                if (_views[_currentView].GetMapType())
-	    	  currentViewerState += "&$mapType$=" + _views[_currentView].GetMapType();
-                if (_views[_currentView].GetMapZoom())
-	    	  currentViewerState += "&$mapZoom$=" + _views[_currentView].GetMapZoom();
-            }
-            if (_currentView == 4) 
-                if (_views[_currentView].GetSelectedFacet())
-	    	  currentViewerState += "&$timelineFacet$=" + _views[_currentView].GetSelectedFacet();
+
 	    // Add filters and create title
             var title = PivotCollection.CollectionName;
             if (_numericFacets.length + _stringFacets.length > 0)

@@ -19,9 +19,9 @@ var jsSrc = [
 	'./src/views/gridview.js',
 	'./src/views/iimagecontroller.js',
 	'./src/views/LoadImageSetHelper.js',
-	'./src/views/mapview.js',
+	/*'./src/views/mapview.js',
 	'./src/views/mapview2.js',
-	'./src/views/timeview.js',
+	'./src/views/timeview.js',*/
 	'./src/views/tableview.js',
 	'./src/views/tilecontroller.js',
 	'./src/views/deepzoom.js',
