@@ -37,7 +37,7 @@ PivotViewer.Views.TileController = Object.subClass({
             tile.CollectionRoot = baseCollectionPath.replace(/\\/gi, "/").replace(/\.xml/gi, "");
             this._canvasContext = canvasContext;
             tile.context = this._canvasContext;
-            tileLocation = new PivotViewer.Views.TileLocation();
+            var tileLocation = new PivotViewer.Views.TileLocation();
             tile._locations.push(tileLocation);
             this._tiles.push(tile);
         }
@@ -114,7 +114,7 @@ PivotViewer.Views.TileController = Object.subClass({
                         // has finished
                         if (!isNaN(now) && !isNaN(end) && doInitialSelection) {
                             var selectedTile = "";
-                            for (t = 0; t < this._tiles.length; t++) {
+                            for (var t = 0; t < this._tiles.length; t++) {
                                 if (this._tiles[t].facetItem.Id == selectedId) {
                                     selectedTile = this._tiles[t];
                                     break;
@@ -284,7 +284,7 @@ PivotViewer.Views.Tile = Object.subClass({
                 var displayHeight = this.height - 8;
                 var displayWidth = Math.ceil(this._controller.GetWidthForImage(this.facetItem.Img, displayHeight));
                 //Narrower images need to be centered 
-                blankWidth = (this.width - 8) - displayWidth;
+                var blankWidth = (this.width - 8) - displayWidth;
 
                 // Handle displaying the deepzoom image tiles (move to deepzoom.js)
                 if (this._controller instanceof PivotViewer.Views.DeepZoomImageController) {
@@ -305,7 +305,7 @@ PivotViewer.Views.Tile = Object.subClass({
                         var scale = displayHeight / levelHeight;
 
                         // handle overlap 
-                        overlap = this._controller.GetOverlap(this.facetItem.Img);
+                        var overlap = this._controller.GetOverlap(this.facetItem.Img);
 
                         var offsetx = (Math.floor(blankWidth / 2)) + 4 + xPosition * Math.floor((tileSize - overlap) * scale);
                         var offsety = 4 + Math.floor((yPosition * (tileSize - overlap) * scale));
@@ -343,7 +343,7 @@ PivotViewer.Views.Tile = Object.subClass({
     Contains: function(mx, my) {
         var foundIt = false;
         var loc = -1;
-        for (i = 0; i < this._locations.length; i++) {
+        for (var i = 0; i < this._locations.length; i++) {
             foundIt = (this._locations[i].x <= mx) && (this._locations[i].x + this.width >= mx) &&
                 (this._locations[i].y <= my) && (this._locations[i].y + this.height >= my);
             if (foundIt) {

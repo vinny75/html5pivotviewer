@@ -156,7 +156,6 @@ PivotViewer.Views.TableView = PivotViewer.Views.IPivotViewerView.subClass({
         var table = $('#pv-table');
         var showAllFacets = false;
         var tableRows = new Array();
-        var sortIndex = 0;
         table.empty();
         var sortImage;
         var offset;
@@ -230,9 +229,9 @@ PivotViewer.Views.TableView = PivotViewer.Views.IPivotViewerView.subClass({
                     }
 
                     if (showAllFacets) {
-                        for (k = 0; k < this.tiles[j].facetItem.Facets.length; k++) {
+                        for (var k = 0; k < this.tiles[j].facetItem.Facets.length; k++) {
                             var attribute = this.tiles[j].facetItem.Facets[k].Name;
-                            for (l = 0; l < this.tiles[j].facetItem.Facets[k].FacetValues.length; l++) {
+                            for (var l = 0; l < this.tiles[j].facetItem.Facets[k].FacetValues.length; l++) {
                                 var value = this.tiles[j].facetItem.Facets[k].FacetValues[l].Value;
 
                                 var sortKeyValue;
@@ -312,10 +311,10 @@ PivotViewer.Views.TableView = PivotViewer.Views.IPivotViewerView.subClass({
                             }
                         }
                     } else {
-                        for (k = 0; k < this.tiles[j].facetItem.Facets.length; k++) {
+                        for (var k = 0; k < this.tiles[j].facetItem.Facets.length; k++) {
                             var attribute = this.tiles[j].facetItem.Facets[k].Name;
                             if (attribute == selectedFacet) {
-                                for (l = 0; l < this.tiles[j].facetItem.Facets[k].FacetValues.length; l++) {
+                                for (var l = 0; l < this.tiles[j].facetItem.Facets[k].FacetValues.length; l++) {
                                     var value = this.tiles[j].facetItem.Facets[k].FacetValues[l].Value;
 
                                     var sortKeyValue;
@@ -510,7 +509,7 @@ PivotViewer.Views.TableView = PivotViewer.Views.IPivotViewerView.subClass({
     IsFilterVisible: function(attribute) {
         var visible = null;
 
-        for (i = 0; i < this.categories.length; i++) {
+        for (var i = 0; i < this.categories.length; i++) {
             if (this.categories[i].Name == attribute) {
                 visible = this.categories[i].IsFilterVisible;
             }

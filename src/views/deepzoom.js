@@ -75,8 +75,8 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
                     that.Height = parseInt(dzcSize.attr("Height"));
                     that.MaxRatio = that.Height / that.MaxWidth;
 
-                    for (i = 0; i < items.length; i++) {
-                        itemSize = $(items[i]).find("Size");
+                    for (var i = 0; i < items.length; i++) {
+                        var itemSize = $(items[i]).find("Size");
                         var width = parseInt(itemSize.attr("Width"));
                         var height = parseInt(itemSize.attr("Height"));
                         var maxDim = width > height ? width : height;
@@ -94,8 +94,8 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
                         if (width > that.MaxWidth) {
                             that.MaxWidth = width;
                         }
-                        if (that._ratio < that.MaxRatio) // i.e. biggest width cf height upside down....
-                        {
+						// i.e. biggest width cf height upside down....
+                        if (that._ratio < that.MaxRatio) {
                             that.MaxRatio = that._ratio;
                         }
 
@@ -150,24 +150,7 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
             if (this._items[i].ItemId == id) {
                 level = (level > this._items[i].MaxLevel ? this._items[i].MaxLevel : level);
 
-                //to work out collage image
-                //convert image n to base 2
-                //convert to array and put even and odd bits into a string
-                //convert strings to base 10 - this represents the tile row and col
-                var baseTwo = this._items[i].DZN.toString(2);
-                var even = "",
-                    odd = "";
-                for (var b = 0; b < baseTwo.length; b++) {
-                    if (b % 2 == 0) {
-                        even += baseTwo[b];
-                    } else {
-                        odd += baseTwo[b];
-                    }
-                }
-                dzCol = parseInt(even, 2);
-                dzRow = parseInt(odd, 2);
                 //for the zoom level work out the DZ tile where it came from
-
                 if ((this._items[i].Levels == undefined || this._items[i].Levels.length == 0) && !this._zooming) {
                     //create 0 level
                     var imageList = this.GetImageList(i, this._baseUrl + "/" + this._items[i].BasePath + this._items[i].DZId + "_files/6/", 6);
@@ -240,7 +223,7 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
     GetDzi: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ItemId == id) {
-                dziName = this._baseUrl + "/" + this._items[i].BasePath + this._items[i].DZId + ".dzi";
+                var dziName = this._baseUrl + "/" + this._items[i].BasePath + this._items[i].DZId + ".dzi";
                 return dziName;
             }
         }

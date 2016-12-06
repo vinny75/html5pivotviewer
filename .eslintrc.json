@@ -1,16 +1,19 @@
 {
-  "env": {
-    "es6": true,
-    "browser": true,
-	"jquery": true
-  },
-  "globals": {
-	"PivotViewer": true
-  },
-  "extends": "eslint:recommended",
-  "rules": {
-	"eqeqeq": ["off", "smart"],  
-    "brace-style": ["error", "1tbs"],
-	"curly": ["error", "all"]
-  }
+	"env": {
+		"es6": true,
+		"browser": true,
+		"jquery": true
+	},
+	"globals": {
+		"PivotViewer": true,
+		"Easing": true
+	},
+	"extends": "eslint:recommended",
+	"rules": {
+		"eqeqeq": ["off", "smart"], 
+		"no-redeclare": "warn",
+		"brace-style": ["warn", "1tbs"],
+		"curly": ["error", "all"],
+		"no-unused-vars": ["error", { "args": "none" }]
+	}
 }

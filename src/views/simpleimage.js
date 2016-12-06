@@ -68,7 +68,7 @@ PivotViewer.Views.SimpleImageController = PivotViewer.Views.IImageController.sub
                     that._items.push(new PivotViewer.Views.SimpleImageItem(images.ImageFiles[i], that._baseUrl, img.width, img.height, img));
                 }
             })
-            .fail(function(jqxhr, textStatus, errorThrown) {
+            .fail(function(jqXHR, textStatus, errorThrown) {
                 //Make sure throbber is removed else everyone thinks the app is still running
                 $('.pv-loading').remove();
 

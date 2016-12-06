@@ -79,7 +79,6 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
         // localhost or whitelisted.
         if (this.CheckAllowedServer() == false) {
             throw "Collection is not hosted on an allowed server";
-            return;
         }
 
         $.ajax({
@@ -270,7 +269,7 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                 //Extensions
                 var extension = $(xml).find("Extension");
                 if (extension.length > 1) {
-                    for (x = 0; x < extension.length; x++) {
+                    for (var x = 0; x < extension.length; x++) {
                         var savedNamespacePrefix = namespacePrefix;
 
                         // Handle locally defined namespaces

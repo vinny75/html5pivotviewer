@@ -70,7 +70,6 @@ PivotViewer.Views.TileBasedView = PivotViewer.Views.IPivotViewerView.subClass({
         // as x2 and y2 are the origin
         var dx = tile._locations[0].x - (canvasWidth / 2);
         var dy = tile._locations[0].y - (canvasHeight / 2);
-        var M = dy / dx;
         var theta = Math.atan2(dy, dx)
         tile._locations[0].destinationx = canvasWidth * Math.cos(theta) + (canvasWidth / 2);
         tile._locations[0].destinationy = canvasHeight * Math.sin(theta) + (canvasHeight / 2);
@@ -87,10 +86,10 @@ PivotViewer.Views.TileBasedView = PivotViewer.Views.IPivotViewerView.subClass({
                         // bounds but will have been done already
                         if ($.isNumeric(x.facetItem.Facets[i].FacetValues[0].Value)) {
                             return primer(x.facetItem.Facets[i].FacetValues[0].Value);
-                        }
+							
                         // If a string facet then could have a number of values.  Only
-                        // sort on values in the filter 
-                        else {
+                        // sort on values in the filter 							
+                        } else {
                             for (var j = 0; j < x.facetItem.Facets[i].FacetValues.length; j++) {
                                 // Has a filter been set? If so, and it is the same facet as the sort
                                 // then sort on the items in the filter where possible (otherwise just 

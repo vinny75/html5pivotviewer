@@ -70,8 +70,6 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
             }
 
             var oldScale = that.Scale;
-            var preWidth = that.currentWidth;
-            var preHeight = that.currentHeight;
             //Set the zoom time - the time it takes to zoom to the scale
             //if on a touch device where evt.scale != undefined then have no delay
             var zoomTime = evt.scale != undefined ? 0 : 1000;
@@ -87,7 +85,7 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
                 that.Scale = evt.delta == 0 ? 1 : (that.Scale + evt.delta - 1);
             }
 
-            if (that.Scale == NaN) {
+            if (isNaN(that.Scale)) {
                 that.Scale = 1;
             }
 
@@ -408,12 +406,12 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
     },
     GetSelectedCol: function(tile) {
         var that = this;
-        selectedCol = Math.round((tile._locations[0].x - that.currentOffsetX) / tile.width);
+        var selectedCol = Math.round((tile._locations[0].x - that.currentOffsetX) / tile.width);
         return selectedCol;
     },
     GetSelectedRow: function(tile) {
         var that = this;
-        selectedRow = Math.round((tile._locations[0].y - that.currentOffsetY) / tile.height);
+        var selectedRow = Math.round((tile._locations[0].y - that.currentOffsetY) / tile.height);
         return selectedRow;
     },
     /// Centres the selected tile
@@ -438,7 +436,9 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
         var selectedRow = 0;
         var offsetX = 0,
             offsetY = 0;
-
+		var canvasWidth = 0,
+			canvasHeight = 0;
+			
         //First get the row and column of the selected tile
         if (selectedItem != null && selectedTile != null) {
             //determine row and column that tile is in in relation to the first tile
@@ -470,6 +470,7 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
         //zoom in on selected tile
         if (selectedItem != null && that.selected != selectedItem) {
             // Find which is proportionally bigger, height or width
+			var origProportion;
             if (tileHeight / canvasHeight > tileWidth / canvasWidth) {
                 origProportion = tileOrigHeight / canvasHeight;
             } else {
@@ -477,13 +478,11 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
             }
             //Get scaling factor so max tile dimension is about 60% total
             //Multiply by two as the zoomslider devides all scaling factors by 2
-            scale = Math.round((0.75 / origProportion) * 2);
+            var scale = Math.round((0.75 / origProportion) * 2);
 
             // Zoom using the slider event
             if (that.selected == "") {
-                var value = $('.pv-toolbarpanel-zoomslider').slider('option', 'value');
-                value = scale;
-                $('.pv-toolbarpanel-zoomslider').slider('option', 'value', value);
+                $('.pv-toolbarpanel-zoomslider').slider('option', 'value', scale);
             }
             that.selected = selectedItem;
             that.CentreOnSelectedTile(selectedCol, selectedRow);
@@ -493,9 +492,7 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
             that.currentOffsetX = that.offsetX;
             that.currentOffsetY = that.offsetY;
             // Zoom using the slider event
-            var value = $('.pv-toolbarpanel-zoomslider').slider('option', 'value');
-            value = 0;
-            $('.pv-toolbarpanel-zoomslider').slider('option', 'value', value);
+            $('.pv-toolbarpanel-zoomslider').slider('option', 'value', 0);
         }
 
         $.publish("/PivotViewer/Views/Item/Selected", [{

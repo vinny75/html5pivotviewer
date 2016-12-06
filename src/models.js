@@ -14,8 +14,6 @@
 
 PivotViewer.Models.Collection = Object.subClass({
     init: function() {
-        var xmlns = "http://schemas.microsoft.com/collection/metadata/2009",
-            xmlnsp = "http://schemas.microsoft.com/livelabs/pivot/collection/2009";
         this.CollectionName = "";
         this.BrandImage = "";
         this.FacetCategories = [];

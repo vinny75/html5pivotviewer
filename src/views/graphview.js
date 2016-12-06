@@ -80,11 +80,6 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
                 return;
             }
             var oldScale = that.Scale;
-            var preWidth = that.currentWidth;
-            var preHeight = that.currentHeight;
-            //Set the zoom time - the time it takes to zoom to the scale
-            //if on a touch device where evt.scale != undefined then have no delay
-            var zoomTime = evt.scale != undefined ? 0 : 1000;
 
             if (evt.scale != undefined) {
                 if (evt.scale >= 1) {
@@ -97,7 +92,7 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
                 that.Scale = evt.delta == 0 ? 1 : (that.Scale + evt.delta - 1);
             }
 
-            if (that.Scale == NaN) {
+            if (isNaN(that.Scale)) {
                 that.Scale = 1;
             }
 
@@ -371,8 +366,8 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
     },
     GetSortedFilter: function() {
         var itemArray = [];
-        for (i = 0; i < this.buckets.length; i++) {
-            for (j = 0; j < this.buckets[i].Ids.length; j++) {
+        for (var i = 0; i < this.buckets.length; i++) {
+            for (var j = 0; j < this.buckets[i].Ids.length; j++) {
                 var obj = new Object();
                 obj.Id = this.buckets[i].Ids[j];
                 obj.Bucket = i;
@@ -387,9 +382,6 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
         if (!keepColsRows) {
             this.rowscols = rowscols;
         }
-
-        var startx = [];
-        var starty = [];
 
         // First clear all tile locations greater that 1
         for (var l = 0; l < this.tiles.length; l++) {
@@ -422,7 +414,7 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
                         this.tiles[j].end = this.tiles[j].start + 1000;
                         this.tiles[j].firstFilterItemDone = true;
                     } else {
-                        tileLocation = new PivotViewer.Views.TileLocation();
+                        var tileLocation = new PivotViewer.Views.TileLocation();
                         tileLocation.startx = this.tiles[j]._locations[0].startx;
                         tileLocation.starty = this.tiles[j]._locations[0].starty;
                         tileLocation.x = this.tiles[j]._locations[0].x;
@@ -502,7 +494,7 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
         // Handle datetime data differently.
         var orderByCategory;
 
-        for (i = 0; i < this.categories.length; i++) {
+        for (var i = 0; i < this.categories.length; i++) {
             if (this.categories[i].Name == orderBy) {
                 orderByCategory = this.categories[i];
                 break;
@@ -641,31 +633,31 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
     GetSelectedCol: function(tile, bucket) {
         var that = this;
         var selectedLoc = 0;
-        for (i = 0; i < bucket; i++) {
+        for (var i = 0; i < bucket; i++) {
             if ($.inArray(tile.facetItem.Id, this.buckets[i].Ids) > 0) {
                 selectedLoc++;
             }
         }
         //var selectedLoc = tile.selectedLoc;
         //Need to account for padding in each column...
-        padding = that.rowscols.PaddingX;
-        colsInBar = that.rowscols.Columns;
-        tileMaxWidth = that.rowscols.TileMaxWidth;
-        selectedBar = Math.floor((tile._locations[selectedLoc].x - that.currentOffsetX) / ((tileMaxWidth * colsInBar) + padding));
-        selectedColInBar = Math.round(((tile._locations[selectedLoc].x - that.currentOffsetX) - (selectedBar * (colsInBar * tileMaxWidth + padding))) / tileMaxWidth);
-        selectedCol = (selectedBar * colsInBar) + selectedColInBar;
+        var padding = that.rowscols.PaddingX;
+        var colsInBar = that.rowscols.Columns;
+        var tileMaxWidth = that.rowscols.TileMaxWidth;
+        var selectedBar = Math.floor((tile._locations[selectedLoc].x - that.currentOffsetX) / ((tileMaxWidth * colsInBar) + padding));
+        var selectedColInBar = Math.round(((tile._locations[selectedLoc].x - that.currentOffsetX) - (selectedBar * (colsInBar * tileMaxWidth + padding))) / tileMaxWidth);
+        var selectedCol = (selectedBar * colsInBar) + selectedColInBar;
         return selectedCol;
     },
     GetSelectedRow: function(tile, bucket) {
         var that = this;
         var selectedLoc = 0;
-        for (i = 0; i < bucket; i++) {
+        for (var i = 0; i < bucket; i++) {
             if ($.inArray(tile.facetItem.Id, this.buckets[i].Ids) > 0) {
                 selectedLoc++;
             }
         }
         //var selectedLoc = tile.selectedLoc;
-        selectedRow = Math.round((that.canvasHeightUIAdjusted - (tile._locations[selectedLoc].y - that.currentOffsetY)) / tile.height);
+        var selectedRow = Math.round((that.canvasHeightUIAdjusted - (tile._locations[selectedLoc].y - that.currentOffsetY)) / tile.height);
         return selectedRow;
     },
     /// Centres the selected tile
@@ -761,13 +753,11 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
             }
             //Get scaling factor so max tile dimension is about 60% total
             //Multiply by two as the zoomslider devides all scaling factors by 2
-            scale = Math.round((0.75 / origProportion) * 2);
+            var scale = Math.round((0.75 / origProportion) * 2);
 
             // Zoom using the slider event
             if (that.selected == "") {
-                var value = $('.pv-toolbarpanel-zoomslider').slider('option', 'value');
-                value = scale;
-                $('.pv-toolbarpanel-zoomslider').slider('option', 'value', value);
+                $('.pv-toolbarpanel-zoomslider').slider('option', 'value', scale);
             }
             that.selected = selectedItem;
             that.CentreOnSelectedTile(selectedCol, selectedRow);
@@ -807,9 +797,7 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
             that.currentOffsetY = that.offsetY;
 
             // Zoom using the slider event
-            var value = $('.pv-toolbarpanel-zoomslider').slider('option', 'value');
-            value = 0;
-            $('.pv-toolbarpanel-zoomslider').slider('option', 'value', value);
+            $('.pv-toolbarpanel-zoomslider').slider('option', 'value', 0);
 
             $('.pv-viewarea-graphview-overlay div').fadeIn('slow');
         }

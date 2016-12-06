@@ -22,7 +22,7 @@ PivotViewer.Models.Loaders.JSONLoader = PivotViewer.Models.Loaders.ICollectionLo
         collection.CollectionBaseNoProxy = this.JSONUriNoProxy;
         collection.CollectionBase = this.JSONUri;
 
-        var jqXHR = $.getJSON(this.JSONUri)
+        $.getJSON(this.JSONUri)
             .done(function(data) {
                 Debug.Log('JSON loaded');
 
@@ -60,7 +60,7 @@ PivotViewer.Models.Loaders.JSONLoader = PivotViewer.Models.Loaders.ICollectionLo
 
                     if (data.FacetCategories.FacetCategory[i].SortOrder != undefined) {
                         var customSort = new PivotViewer.Models.FacetCategorySort(data.FacetCategories.FacetCategory[i].SortOrder.Name);
-                        for (j = 0; j < data.FacetCategories.FacetCategory[i].SortValues.Value.length; J++) {
+                        for (var j = 0; j < data.FacetCategories.FacetCategory[i].SortValues.Value.length; j++) {
                             customSort.Values.push(data.FacetCategories.FacetCategory[i].SortValues.Value[j]);
                         }
                         facetCategory.CustomSort = customSort;
@@ -94,11 +94,11 @@ PivotViewer.Models.Loaders.JSONLoader = PivotViewer.Models.Loaders.ICollectionLo
 
                         item.Description = PivotViewer.Utils.HtmlSpecialChars(data.Items.Item[i].Description);
 
-                        for (j = 0; j < data.Items.Item[i].Facets.Facet.length; j++) {
+                        for (var j = 0; j < data.Items.Item[i].Facets.Facet.length; j++) {
                             var values = [];
                             if (data.Items.Item[i].Facets.Facet[j].Number != undefined) {
                                 if (data.Items.Item[i].Facets.Facet[j].Number.length > 0) {
-                                    for (k = 0; k < data.Items.Item[i].Facets.Facet[j].Number.length; k++) {
+                                    for (var k = 0; k < data.Items.Item[i].Facets.Facet[j].Number.length; k++) {
                                         var value = new PivotViewer.Models.FacetValue(parseFloat(data.Items.Item[i].Facets.Facet[j].Number[k].Value));
                                         values.push(value);
                                     }
@@ -107,14 +107,14 @@ PivotViewer.Models.Loaders.JSONLoader = PivotViewer.Models.Loaders.ICollectionLo
                                     values.push(value);
                                 }
                             } else if (data.Items.Item[i].Facets.Facet[j].Link != undefined) {
-                                for (k = 0; k < data.Items.Item[i].Facets.Facet[j].Link.length; k++) {
+                                for (var k = 0; k < data.Items.Item[i].Facets.Facet[j].Link.length; k++) {
                                     var value = new PivotViewer.Models.FacetValue(data.Items.Item[i].Facets.Facet[j].Link[k].Name);
                                     value.Href = data.Items.Item[i].Facets.Facet[j].Link[k].Href;
                                     values.push(value);
                                 }
                             } else if (data.Items.Item[i].Facets.Facet[j].String != undefined) {
                                 if (data.Items.Item[i].Facets.Facet[j].String.length > 0) {
-                                    for (k = 0; k < data.Items.Item[i].Facets.Facet[j].String.length; k++) {
+                                    for (var k = 0; k < data.Items.Item[i].Facets.Facet[j].String.length; k++) {
                                         var value = new PivotViewer.Models.FacetValue(data.Items.Item[i].Facets.Facet[j].String[k].Value);
                                         values.push(value);
                                     }
@@ -124,7 +124,7 @@ PivotViewer.Models.Loaders.JSONLoader = PivotViewer.Models.Loaders.ICollectionLo
                                 }
                             } else if (data.Items.Item[i].Facets.Facet[j].LongString != undefined) {
                                 if (data.Items.Item[i].Facets.Facet[j].LongString.length > 0) {
-                                    for (k = 0; k < data.Items.Item[i].Facets.Facet[j].LongString.length; k++) {
+                                    for (var k = 0; k < data.Items.Item[i].Facets.Facet[j].LongString.length; k++) {
                                         var value = new PivotViewer.Models.FacetValue(data.Items.Item[i].Facets.Facet[j].LongString[k].Value);
                                         values.push(value);
                                     }
@@ -134,7 +134,7 @@ PivotViewer.Models.Loaders.JSONLoader = PivotViewer.Models.Loaders.ICollectionLo
                                 }
                             } else if (data.Items.Item[i].Facets.Facet[j].DateTime != undefined) {
                                 if (data.Items.Item[i].Facets.Facet[j].DateTime.length > 0) {
-                                    for (k = 0; k < data.Items.Item[i].Facets.Facet[j].DateTime.length; k++) {
+                                    for (var k = 0; k < data.Items.Item[i].Facets.Facet[j].DateTime.length; k++) {
                                         var value = new PivotViewer.Models.FacetValue(data.Items.Item[i].Facets.Facet[j].DateTime[k].Value);
                                         values.push(value);
                                     }
