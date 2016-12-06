@@ -19,7 +19,7 @@
 /// Retrieves and caches images
 ///
 PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.subClass({
-    init: function () {
+    init: function() {
         this._items = [];
         this._collageItems = [];
         this._baseUrl = "";
@@ -33,11 +33,11 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
         var that = this;
 
         //Events
-        $.subscribe("/PivotViewer/ImageController/Zoom", function (evt) {
+        $.subscribe("/PivotViewer/ImageController/Zoom", function(evt) {
             that._zooming = evt;
         });
     },
-    Setup: function (deepzoomCollection) {
+    Setup: function(deepzoomCollection) {
         //get base URL
         this._baseUrl = deepzoomCollection.substring(0, deepzoomCollection.lastIndexOf("/"));
         this._collageUrl = deepzoomCollection.substring(deepzoomCollection.lastIndexOf("/") + 1).replace('.xml', '_files');
@@ -47,7 +47,7 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
             type: "GET",
             url: deepzoomCollection,
             dataType: "xml",
-            success: function (xml) {
+            success: function(xml) {
                 var collection = $(xml).find("Collection");
                 that._tileSize = $(collection).attr("TileSize");
                 that._format = $(collection).attr('Format');
@@ -62,10 +62,10 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
                     msg = msg + 'No items in the DeepZoom Collection<br><br>';
                     msg = msg + 'URL        : ' + this.url + '<br>';
                     msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                    PivotViewer.Utils.ModalDialog(msg); 
+                    PivotViewer.Utils.ModalDialog(msg);
                     return;
                 }
-                
+
                 //If collection itself contains size information, use first one for now
                 var dzcSize = $(items[0]).find('Size');
                 if (dzcSize.length > 0) {
@@ -73,9 +73,9 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
                     that.MaxWidth = parseInt(dzcSize.attr("Width"));
                     // Use height of first image for now...
                     that.Height = parseInt(dzcSize.attr("Height"));
-                    that.MaxRatio = that.Height/that.MaxWidth;
+                    that.MaxRatio = that.Height / that.MaxWidth;
 
-                    for ( i = 0; i < items.length; i++ ) {
+                    for (i = 0; i < items.length; i++) {
                         itemSize = $(items[i]).find("Size");
                         var width = parseInt(itemSize.attr("Width"));
                         var height = parseInt(itemSize.attr("Height"));
@@ -88,22 +88,26 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
                         var dzN = $(items[i]).attr('N');
                         var dzId = dziSource.substring(dziSource.lastIndexOf("/") + 1).replace(/\.xml/gi, "").replace(/\.dzi/gi, "");
                         var basePath = dziSource.substring(0, dziSource.lastIndexOf("/"));
-                        if (basePath.length > 0)
-                             basePath = basePath + '/';
-                        if (width > that.MaxWidth)
+                        if (basePath.length > 0) {
+                            basePath = basePath + '/';
+                        }
+                        if (width > that.MaxWidth) {
                             that.MaxWidth = width;
-                        if (that._ratio < that.MaxRatio)  // i.e. biggest width cf height upside down....
+                        }
+                        if (that._ratio < that.MaxRatio) // i.e. biggest width cf height upside down....
+                        {
                             that.MaxRatio = that._ratio;
+                        }
 
                         that._items.push(new PivotViewer.Views.DeepZoomItem(itemId, dzId, dzN, basePath, that._ratio, width, height, maxLevel, that._baseUrl, dziSource));
                     }
                 }
 
-                
-                 //Loaded DeepZoom collection
-                 $.publish("/PivotViewer/ImageController/Collection/Loaded", null);
-             },
-             error: function(jqXHR, textStatus, errorThrown) {
+
+                //Loaded DeepZoom collection
+                $.publish("/PivotViewer/ImageController/Collection/Loaded", null);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
                 //Make sure throbber is removed else everyone thinks the app is still running
                 $('.pv-loading').remove();
 
@@ -114,25 +118,26 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
                 msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
                 msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
                 msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                PivotViewer.Utils.ModalDialog(msg); 
+                PivotViewer.Utils.ModalDialog(msg);
             }
         });
     },
 
-    GetImages: function (id, width, height) {
+    GetImages: function(id, width, height) {
         //Determine level
         var biggest = width > height ? width : height;
         var thisLevel = Math.ceil(Math.log(biggest) / Math.log(2));
 
-        if (thisLevel == Infinity || thisLevel == -Infinity)
+        if (thisLevel == Infinity || thisLevel == -Infinity) {
             thisLevel = 0;
+        }
 
         //TODO: Look at caching last image to avoid using _controller
         this._level = thisLevel;
         return this.GetImagesAtLevel(id, thisLevel);
     },
 
-    GetImagesAtLevel: function (id, level) {
+    GetImagesAtLevel: function(id, level) {
         //if the request level is greater than the collections max then set to max
         //level = (level > _maxLevel ? _maxLevel : level);
 
@@ -150,12 +155,14 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
                 //convert to array and put even and odd bits into a string
                 //convert strings to base 10 - this represents the tile row and col
                 var baseTwo = this._items[i].DZN.toString(2);
-                var even = "", odd = "";
+                var even = "",
+                    odd = "";
                 for (var b = 0; b < baseTwo.length; b++) {
-                    if (b % 2 == 0)
+                    if (b % 2 == 0) {
                         even += baseTwo[b];
-                    else
+                    } else {
                         odd += baseTwo[b];
+                    }
                 }
                 dzCol = parseInt(even, 2);
                 dzRow = parseInt(odd, 2);
@@ -163,13 +170,12 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
 
                 if ((this._items[i].Levels == undefined || this._items[i].Levels.length == 0) && !this._zooming) {
                     //create 0 level
-                    var imageList = this.GetImageList(i, this._baseUrl + "/" + this._items[i].BasePath + this._items[i].DZId + "_files/6/", 6); ;
+                    var imageList = this.GetImageList(i, this._baseUrl + "/" + this._items[i].BasePath + this._items[i].DZId + "_files/6/", 6);
                     var newLevel = new PivotViewer.Views.LoadImageSetHelper();
                     newLevel.LoadImages(imageList);
                     this._items[i].Levels.push(newLevel);
                     return null;
-                }
-                else if (this._items[i].Levels.length < level && !this._zooming) {
+                } else if (this._items[i].Levels.length < level && !this._zooming) {
                     //requested level does not exist, and the Levels list is smaller than the requested level
                     var imageList = this.GetImageList(i, this._baseUrl + "/" + this._items[i].BasePath + this._items[i].DZId + "_files/" + level + "/", level);
                     var newLevel = new PivotViewer.Views.LoadImageSetHelper();
@@ -199,7 +205,7 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
         return null;
     },
 
-    GetImageList: function (itemIndex, basePath, level) {
+    GetImageList: function(itemIndex, basePath, level) {
         var fileNames = [];
 
         var tileSize = this._tileSize;
@@ -208,7 +214,7 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
         var height = this._items[itemIndex].Height;
         var maxLevel = this._items[itemIndex].MaxLevel;
 
-        var levelWidth = Math.ceil( (height/ratio) / Math.pow(2, maxLevel - level));
+        var levelWidth = Math.ceil((height / ratio) / Math.pow(2, maxLevel - level));
         var levelHeight = Math.ceil(height / Math.pow(2, maxLevel - level));
         //based on the width for this level, get the slices based on the DZ Tile Size
         var hslices = Math.ceil(levelWidth / tileSize);
@@ -223,69 +229,70 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
         return fileNames;
     },
 
-    GetWidthForImage: function( id, height ) {
+    GetWidthForImage: function(id, height) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ItemId == id) {
-               return Math.floor(height / this._items[i].Ratio);
+                return Math.floor(height / this._items[i].Ratio);
             }
         }
     },
 
-    GetDzi: function( id ) {
+    GetDzi: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ItemId == id) {
-               dziName = this._baseUrl + "/" + this._items[i].BasePath + this._items[i].DZId + ".dzi";
-               return dziName;
+                dziName = this._baseUrl + "/" + this._items[i].BasePath + this._items[i].DZId + ".dzi";
+                return dziName;
             }
         }
     },
 
-    GetMaxLevel: function( id ) {
+    GetMaxLevel: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ItemId == id) {
-               return this._items[i].MaxLevel;
+                return this._items[i].MaxLevel;
             }
         }
     },
 
-    GetWidth: function( id ) {
+    GetWidth: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ItemId == id) {
-               return this._items[i].Width;
+                return this._items[i].Width;
             }
         }
     },
 
-    GetHeight: function( id ) {
+    GetHeight: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ItemId == id) {
-               return this._items[i].Height;
+                return this._items[i].Height;
             }
         }
     },
-    GetOverlap: function( id ) {
+    GetOverlap: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ItemId == id) {
-               return this._items[i].Overlap;
+                return this._items[i].Overlap;
             }
         }
     },
-    GetRatio: function( id ) {
+    GetRatio: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ItemId == id) {
-               return this._items[i].Ratio;
+                return this._items[i].Ratio;
             }
         }
     }
 });
 
-PivotViewer.Views.DeepZoomItem = Object.subClass({    init: function (ItemId, DZId, DZn, BasePath, Ratio, Width, Height, MaxLevel, baseUrl, dziSource) {
+PivotViewer.Views.DeepZoomItem = Object.subClass({
+    init: function(ItemId, DZId, DZn, BasePath, Ratio, Width, Height, MaxLevel, baseUrl, dziSource) {
         this.ItemId = ItemId,
-        this.DZId = DZId,
-        this.DZN = parseInt(DZn),
-        this.BasePath = BasePath,
-        this.Levels = [];    //jch                    
-        this.Ratio = Ratio;  
+            this.DZId = DZId,
+            this.DZN = parseInt(DZn),
+            this.BasePath = BasePath,
+            this.Levels = []; //jch                    
+        this.Ratio = Ratio;
         this.Width = Width;
         this.Height = Height;
         this.MaxLevel = MaxLevel;
@@ -296,12 +303,13 @@ PivotViewer.Views.DeepZoomItem = Object.subClass({    init: function (ItemId, DZ
             type: "GET",
             url: baseUrl + "/" + dziSource,
             dataType: "xml",
-            success: function (dzixml) {
+            success: function(dzixml) {
                 //In case we find a dzi, recalculate sizes
                 var image = $(dzixml).find("Image");
-                if (image.length == 0)
+                if (image.length == 0) {
                     return;
-        
+                }
+
                 var jImage = $(image[0]);
                 that.Overlap = jImage.attr('Overlap');
             },

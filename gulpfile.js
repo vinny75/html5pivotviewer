@@ -4,7 +4,11 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var cleanCSS = require('gulp-clean-css');
 var imagemin = require('gulp-imagemin');
-
+var eslint = require('gulp-eslint');
+var fs = require('fs');
+var reporter = require('eslint-html-reporter');
+var beautify = require('gulp-beautify');
+ 
 var jsSrc = [
 	'./src/namespaces.js',
 	'./src/pubsub.js',
@@ -62,6 +66,19 @@ gulp.task('images', function() {
     return gulp.src('./images/*')
         .pipe(imagemin())
         .pipe(gulp.dest(imgDest));		
+});
+
+gulp.task('lint', function() {
+	return gulp.src(jsSrc)
+		.pipe(eslint())
+		.pipe(eslint.format(reporter, fs.createWriteStream('./eslint-report.html')))
+		.pipe(eslint.failAfterError());
+});
+
+gulp.task('beautify', function() {
+  gulp.src(jsSrc)
+    .pipe(beautify())
+    .pipe(gulp.dest('./clean'))
 });
 
 gulp.task('serve', function () {

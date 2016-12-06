@@ -14,9 +14,9 @@
 
 ///  Collection loader interface - used so that different types of data sources can be used
 PivotViewer.Models.Loaders.ICollectionLoader = Object.subClass({
-    init: function () { },
-    LoadCollection: function (collection) {
-        if (!collection instanceof PivotViewer.Models.Collection) {
+    init: function() {},
+    LoadCollection: function(collection) {
+        if (!(collection instanceof PivotViewer.Models.Collection)) {
             throw "collection not an instance of PivotViewer.Models.Collection.";
         }
     }
@@ -24,46 +24,51 @@ PivotViewer.Models.Loaders.ICollectionLoader = Object.subClass({
 
 //CXML loader
 PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLoader.subClass({
-    init: function (CXMLUri, proxy, allowHosts, allowedHosts) {
+    init: function(CXMLUri, proxy, allowHosts, allowedHosts) {
         this.CXMLUriNoProxy = CXMLUri;
-        if (proxy)
+        if (proxy) {
             this.CXMLUri = proxy + CXMLUri;
-        else 
+        } else {
             this.CXMLUri = CXMLUri;
-        if (allowHosts)
-          this.allowHosts = allowHosts;
-        else 
-          this.allowHosts = false;
+        }
+        if (allowHosts) {
+            this.allowHosts = allowHosts;
+        } else {
+            this.allowHosts = false;
+        }
         //var this.allowedHosts = [];
-        if (allowedHosts)
-          this.allowedHosts = allowedHosts.split(',');
+        if (allowedHosts) {
+            this.allowedHosts = allowedHosts.split(',');
+        }
     },
-    CheckAllowedServer: function () {
-     var host;
-     if (this.CXMLUri.startsWith ('http://')) {
-       host = this.CXMLUri.substring(7, this.CXMLUri.indexOf('/' , 7));
-     } else if (this.CXMLUri.startsWith ('https://')) {
-       host = this.CXMLUri.substring(8, this.CXMLUri.indexOf('/' , 8));
-     } else
-       return true;
+    CheckAllowedServer: function() {
+        var host;
+        if (this.CXMLUri.startsWith('http://')) {
+            host = this.CXMLUri.substring(7, this.CXMLUri.indexOf('/', 7));
+        } else if (this.CXMLUri.startsWith('https://')) {
+            host = this.CXMLUri.substring(8, this.CXMLUri.indexOf('/', 8));
+        } else {
+            return true;
+        }
 
-     // Do we have an allowed list?
-     if (this.allowHosts) {
-       for (var i = 0; i < this.allowedHosts.length; i++) {
-         if (host == this.allowedHosts[i] || this.allowedHosts[i] == '*')
-           return true;
-       }
-     }
+        // Do we have an allowed list?
+        if (this.allowHosts) {
+            for (var i = 0; i < this.allowedHosts.length; i++) {
+                if (host == this.allowedHosts[i] || this.allowedHosts[i] == '*') {
+                    return true;
+                }
+            }
+        }
 
-     if (host == 'localhost' || (host.includes(':') && host.startsWith('localhost:')) ||
-           host == '127.0.0.1' || (host.includes(':') && host.startsWith('127.0.0.1:')) ||
-           host == location.host) {
-           return true;
-     } else {
-         return false;
-     }
+        if (host == 'localhost' || (host.includes(':') && host.startsWith('localhost:')) ||
+            host == '127.0.0.1' || (host.includes(':') && host.startsWith('127.0.0.1:')) ||
+            host == location.host) {
+            return true;
+        } else {
+            return false;
+        }
     },
-    LoadCollection: function (collection) {
+    LoadCollection: function(collection) {
         var collection = collection;
         this._super(collection);
 
@@ -73,15 +78,15 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
         // Before loading check that the server that the collection is loaded from is either 
         // localhost or whitelisted.
         if (this.CheckAllowedServer() == false) {
-          throw "Collection is not hosted on an allowed server";
-          return;
+            throw "Collection is not hosted on an allowed server";
+            return;
         }
 
         $.ajax({
             type: "GET",
             url: this.CXMLUri,
             dataType: "xml",
-            success: function (xml) {
+            success: function(xml) {
                 Debug.Log('CXML loaded');
                 var collectionRoot = $(xml).find("Collection")[0];
                 var maxRelatedLinksLength = 0;
@@ -91,12 +96,12 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                 if (collectionRoot == undefined) {
                     //Make sure throbber is removed else everyone thinks the app is still running
                     $('.pv-loading').remove();
- 
+
                     //Display message so the user knows something is wrong
                     var msg = '';
                     msg = msg + 'Error parsing CXML Collection<br>';
                     msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                    PivotViewer.Utils.ModalDialog(msg); 
+                    PivotViewer.Utils.ModalDialog(msg);
                     throw "Error parsing CXML Collection";
                 }
 
@@ -124,13 +129,13 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                     }
 
                     var facetCategory = new PivotViewer.Models.FacetCategory(
-                    facetElement.attr("Name"),
+                        facetElement.attr("Name"),
                         facetElement.attr("Format"),
                         facetElement.attr("Type"),
                         facetElement.attr(namespacePrefix + ":IsFilterVisible") != undefined ? (facetElement.attr(namespacePrefix + ":IsFilterVisible").toLowerCase() == "true" ? true : false) : true,
                         facetElement.attr(namespacePrefix + ":IsMetaDataVisible") != undefined ? (facetElement.attr(namespacePrefix + ":IsMetaDataVisible").toLowerCase() == "true" ? true : false) : true,
                         facetElement.attr(namespacePrefix + ":IsWordWheelVisible") != undefined ? (facetElement.attr(namespacePrefix + ":IsWordWheelVisible").toLowerCase() == "true" ? true : false) : true
-                        );
+                    );
 
                     //Add custom sort order
                     var sortOrder = facetElement.find(namespacePrefix + "\\:SortOrder");
@@ -160,11 +165,11 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                     if (facetItem.length == 0) {
                         //Make sure throbber is removed else everyone thinks the app is still running
                         $('.pv-loading').remove();
- 
+
                         //Display a message so the user knows something is wrong
                         var msg = '';
                         msg = msg + 'There are no items in the CXML Collection<br><br>';
-                        PivotViewer.Utils.ModalDialog(msg); 
+                        PivotViewer.Utils.ModalDialog(msg);
                     } else {
                         for (var i = 0; i < facetItem.length; i++) {
                             var item = new PivotViewer.Models.Item(
@@ -174,14 +179,15 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                                 $(facetItem[i]).attr("Name")
                             );
                             var description = $(facetItem[i]).find("Description");
-                            if (description.length == 1 && description[0].childNodes.length)
+                            if (description.length == 1 && description[0].childNodes.length) {
                                 item.Description = PivotViewer.Utils.HtmlSpecialChars(description[0].childNodes[0].nodeValue);
+                            }
                             var facets = $(facetItem[i]).find("Facet");
                             for (var j = 0; j < facets.length; j++) {
                                 var f = new PivotViewer.Models.Facet(
                                     $(facets[j]).attr("Name")
                                 );
-               
+
                                 var facetChildren = $(facets[j]).children();
                                 for (var k = 0; k < facetChildren.length; k++) {
                                     if (facetChildren[k].nodeType == 1) {
@@ -189,19 +195,19 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                                         if (v == null || v == "") {
                                             if (facetChildren[k].nodeName == "Link") {
                                                 if ($(facetChildren[k]).attr("Href") == "" || $(facetChildren[k]).attr("Href") == null) {
-                                                   var fValue = new PivotViewer.Models.FacetValue(PivotViewer.Utils.HtmlSpecialChars("(empty Link)"));
-                                                   f.AddFacetValue(fValue);
-                                              
+                                                    var fValue = new PivotViewer.Models.FacetValue(PivotViewer.Utils.HtmlSpecialChars("(empty Link)"));
+                                                    f.AddFacetValue(fValue);
+
                                                 } else if ($(facetChildren[k]).attr("Name") == "" || $(facetChildren[k]).attr("Name") == null) {
                                                     var fValue = new PivotViewer.Models.FacetValue("(unnamed Link)");
                                                     fValue.Href = $(facetChildren[k]).attr("Href");
                                                     f.AddFacetValue(fValue);
-                                                } else { 
+                                                } else {
                                                     var fValue = new PivotViewer.Models.FacetValue($(facetChildren[k]).attr("Name"));
                                                     fValue.Href = $(facetChildren[k]).attr("Href");
                                                     f.AddFacetValue(fValue);
-                                                } 
-                                            } else { 
+                                                }
+                                            } else {
                                                 var fValue = new PivotViewer.Models.FacetValue(PivotViewer.Utils.HtmlSpecialChars("(empty " + facetChildren[k].nodeName + ")"));
                                                 f.AddFacetValue(fValue);
                                             }
@@ -222,12 +228,13 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                             var itemExtension = $(facetItem[i]).find("Extension");
                             if (itemExtension.length == 1) {
                                 var savedNamespacePrefix = namespacePrefix;
-                    
+
                                 // Handle locally defined namespaces
                                 for (var j = 0; j < itemExtension[0].childNodes.length; j++) {
                                     namespacePrefix = itemExtension[0].childNodes[j].lookupPrefix("http://schemas.microsoft.com/livelabs/pivot/collection/2009");
-                                    if (namespacePrefix)
+                                    if (namespacePrefix) {
                                         break;
+                                    }
                                 }
 
                                 //var itemRelated = $(itemExtension[0]).find('d1p1\\:Related, Related');
@@ -235,23 +242,23 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                                 if (itemRelated.length == 1) {
                                     var links = $(itemRelated[0]).find(namespacePrefix + '\\:Link, Link');
                                     for (var l = 0; l < links.length; l++) {
-                                        var linkName = $(links[l]).attr("Name"); 
-                                        var linkHref = $(links[l]).attr("Href"); 
-                                        if (linkHref.indexOf(".cxml") == -1 && 
+                                        var linkName = $(links[l]).attr("Name");
+                                        var linkHref = $(links[l]).attr("Href");
+                                        if (linkHref.indexOf(".cxml") == -1 &&
                                             linkHref.indexOf("pivot.vsp") >= 0) {
-                                                var url = $.url(this.url);
-                                                linkHref = url.attr('protocol') + "://" + url.attr('authority') + url.attr('directory') + linkHref;
-                                        }
-                                        else if (linkHref.indexOf(".cxml") == -1 && 
+                                            var url = $.url(this.url);
+                                            linkHref = url.attr('protocol') + "://" + url.attr('authority') + url.attr('directory') + linkHref;
+                                        } else if (linkHref.indexOf(".cxml") == -1 &&
                                             linkHref.indexOf("sparql") >= 0) {
-                                                var url = $.url(this.url);
-                                                linkHref = location.origin + location.pathname  +"?url=" + linkHref;
+                                            var url = $.url(this.url);
+                                            linkHref = location.origin + location.pathname + "?url=" + linkHref;
                                         }
                                         var link = new PivotViewer.Models.ItemLink(linkName, linkHref);
                                         item.Links.push(link);
                                     }
-                                    if (links.length > maxRelatedLinksLength)
-                                       maxRelatedLinksLength = links.length;
+                                    if (links.length > maxRelatedLinksLength) {
+                                        maxRelatedLinksLength = links.length;
+                                    }
                                 }
                                 namespacePrefix = savedNamespacePrefix;
                             }
@@ -265,17 +272,18 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                 if (extension.length > 1) {
                     for (x = 0; x < extension.length; x++) {
                         var savedNamespacePrefix = namespacePrefix;
-                    
+
                         // Handle locally defined namespaces
                         for (var j = 0; j < extension[x].childNodes.length; j++) {
                             namespacePrefix = extension[0].childNodes[j].lookupPrefix("http://schemas.microsoft.com/livelabs/pivot/collection/2009");
-                            if (namespacePrefix)
+                            if (namespacePrefix) {
                                 break;
+                            }
                         }
 
                         //var collectionCopyright = $(extension[x]).find('d1p1\\:Copyright, Copyright');
                         var collectionCopyright = $(extension[x]).find(namespacePrefix + '\\:Copyright, Copyright');
-                        if (collectionCopyright.length > 0) { 
+                        if (collectionCopyright.length > 0) {
                             collection.CopyrightName = $(collectionCopyright[0]).attr("Name");
                             collection.CopyrightHref = $(collectionCopyright[0]).attr("Href");
                             break;
@@ -284,10 +292,11 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                     }
                 }
 
-                if (facetItem.length > 0) 
-                  $.publish("/PivotViewer/Models/Collection/Loaded", null);
+                if (facetItem.length > 0) {
+                    $.publish("/PivotViewer/Models/Collection/Loaded", null);
+                }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function(jqXHR, textStatus, errorThrown) {
                 //Make sure throbber is removed else everyone thinks the app is still running
                 $('.pv-loading').remove();
 
@@ -298,7 +307,7 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                 msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
                 msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
                 msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                PivotViewer.Utils.ModalDialog(msg); 
+                PivotViewer.Utils.ModalDialog(msg);
             }
         });
     }

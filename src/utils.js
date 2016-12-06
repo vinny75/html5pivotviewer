@@ -13,113 +13,124 @@
 //  This software is licensed under the terms of the
 //  GNU General Public License v2 (see COPYING)
 //
-
-Debug.Log = function (message) {
-    if (window.console && window.console.log && typeof debug != "undefined" && debug == true) {
+Debug.Log = function(message) {
+    if (window.console && window.console.log && typeof debug !== "undefined" && debug == true) {
         window.console.log(message);
     }
 };
 
 //Gets the next 'frame' from the browser (there are several methods) and controls the frame rate
-window.requestAnimFrame = (function (callback) {
+window.requestAnimFrame = (function(callback) {
     return window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame ||
         window.msRequestAnimationFrame ||
-    function (callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
+        function(callback) {
+            window.setTimeout(callback, 1000 / 60);
+        };
 })();
 
-PivotViewer.Utils.EscapeMetaChars = function (jQuerySelector) {
+PivotViewer.Utils.EscapeMetaChars = function(jQuerySelector) {
     //!"#$%&'()*+,./:;<=>?@[\]^`{|}~
     return jQuerySelector
-            .replace(/\|/gi, "\\|")
-            .replace(/\//gi, "\\/")
-            .replace(/'/gi, "\\'")
-            .replace(/,/gi, "\\,")
-            .replace(/:/gi, "\\:")
-            .replace(/\(/gi, "\\(")
-            .replace(/\)/gi, "\\)")
-            .replace(/\+/gi, "\\+")
-            .replace(/\+/gi, "\\-")
-            .replace(/\+/gi, "\\_")
-            .replace(/\+/gi, "\\%");
+        .replace(/\|/gi, "\\|")
+        .replace(/\//gi, "\\/")
+        .replace(/'/gi, "\\'")
+        .replace(/,/gi, "\\,")
+        .replace(/:/gi, "\\:")
+        .replace(/\(/gi, "\\(")
+        .replace(/\)/gi, "\\)")
+        .replace(/\+/gi, "\\+")
+        .replace(/\+/gi, "\\-")
+        .replace(/\+/gi, "\\_")
+        .replace(/\+/gi, "\\%");
 };
 
-PivotViewer.Utils.EscapeItemId = function (itemId) {
+PivotViewer.Utils.EscapeItemId = function(itemId) {
     return itemId
-            .replace(/\s+/gi, "|")
-            .replace(/'/gi, "")
-            .replace(/\(/gi, "")
-            .replace(/\)/gi, "")
-            .replace(/\./gi, "");
+        .replace(/\s+/gi, "|")
+        .replace(/'/gi, "")
+        .replace(/\(/gi, "")
+        .replace(/\)/gi, "")
+        .replace(/\./gi, "");
 };
 
-PivotViewer.Utils.HtmlSpecialChars = function (orig) {
+PivotViewer.Utils.HtmlSpecialChars = function(orig) {
     return jQuery('<div />').text(orig).html();
 }
 
-PivotViewer.Utils.Now = function () {
-    if (Date.now)
+PivotViewer.Utils.Now = function() {
+    if (Date.now) {
         return Date.now();
-    else
+    } else {
         return (new Date().getTime());
+    }
 };
 
 // Provided the minimum number is < 1000000
-PivotViewer.Utils.Min = function (values) {
+PivotViewer.Utils.Min = function(values) {
     var min = 1000000;
-    for (var i = 0, _iLen = values.length; i < _iLen; i++)
+    for (var i = 0, _iLen = values.length; i < _iLen; i++) {
         min = min > values[i] ? values[i] : min;
+    }
     return min;
 }
 
 // Provided the maximum number is > -1000000
-PivotViewer.Utils.Max = function (values) {
+PivotViewer.Utils.Max = function(values) {
     var max = -1000000;
-    for (var i = 0, _iLen = values.length; i < _iLen; i++)
+    for (var i = 0, _iLen = values.length; i < _iLen; i++) {
         max = max < values[i] ? values[i] : max;
+    }
     return max;
 }
 
-PivotViewer.Utils.Histogram = function (values) {
-    if (!values instanceof Array)
+PivotViewer.Utils.Histogram = function(values) {
+    if (!(values instanceof Array)) {
         return null;
+    }
 
     var min = PivotViewer.Utils.Min(values);
     var max = PivotViewer.Utils.Max(values);
 
     var bins = (Math.floor(Math.pow(2 * values.length, 1 / 3)) + 1) * 2;
-    if (bins > 10)
+    if (bins > 10) {
         bins = 10;
+    }
     var stepSize = ((max + 1) - (min - 1)) / bins;
 
     var histogram = [];
-	var maxCount = 0;
+    var maxCount = 0;
     for (var i = 0; i < bins; i++) {
         var minRange = min + (i * stepSize);
         var maxRange = min + ((i + 1) * stepSize);
         histogram.push([]);
         for (var j = 0, _jLen = values.length; j < _jLen; j++) {
-            if (minRange <= values[j] && maxRange > values[j])
+            if (minRange <= values[j] && maxRange > values[j]) {
                 histogram[i].push(values[j]);
+            }
         }
-		maxCount = maxCount < histogram[i].length ? histogram[i].length : maxCount; 
+        maxCount = maxCount < histogram[i].length ? histogram[i].length : maxCount;
     }
-    return { Histogram: histogram, Min: min, Max: max, BinCount: bins, MaxCount: maxCount }; 
+    return {
+        Histogram: histogram,
+        Min: min,
+        Max: max,
+        BinCount: bins,
+        MaxCount: maxCount
+    };
 };
 
 PivotViewer.Utils.ModalDialog = function(msg, title) {
     $('<div id="pv-modal-dialog"></div>').dialog({
         modal: true,
         title: title ? title : 'HTML 5 PivotViewer',
-        open: function () {
+        open: function() {
             $(this).html(msg);
         },
         buttons: {
-            Ok: function () {
+            Ok: function() {
                 $(this).dialog("close");
                 $("#pv-modal-dialog").remove();
             }
@@ -130,13 +141,15 @@ PivotViewer.Utils.ModalDialog = function(msg, title) {
 // A simple class creation library.
 // From Secrets of the JavaScript Ninja
 // Inspired by base2 and Prototype
-(function () {
+(function() {
     var initializing = false,
-    // Determine if functions can be serialized
-    fnTest = /xyz/.test(function () { xyz; }) ? /\b_super\b/ : /.*/;
+        // Determine if functions can be serialized
+        fnTest = /xyz/.test(function() {
+            xyz;
+        }) ? /\b_super\b/ : /.*/;
 
     // Create a new Class that inherits from this class
-    Object.subClass = function (prop) {
+    Object.subClass = function(prop) {
         var _super = this.prototype;
 
         // Instantiate a base class (but only create the instance,
@@ -148,32 +161,33 @@ PivotViewer.Utils.ModalDialog = function(msg, title) {
         // Copy the properties over onto the new prototype
         for (var name in prop) {
             // Check if we're overwriting an existing function
-            proto[name] = typeof prop[name] == "function" &&
-        typeof _super[name] == "function" && fnTest.test(prop[name]) ?
-        (function (name, fn) {
-            return function () {
-                var tmp = this._super;
+            proto[name] = typeof prop[name] === "function" &&
+                typeof _super[name] === "function" && fnTest.test(prop[name]) ?
+                (function(name, fn) {
+                    return function() {
+                        var tmp = this._super;
 
-                // Add a new ._super() method that is the same method
-                // but on the super-class
-                this._super = _super[name];
+                        // Add a new ._super() method that is the same method
+                        // but on the super-class
+                        this._super = _super[name];
 
-                // The method only need to be bound temporarily, so we
-                // remove it when we're done executing
-                var ret = fn.apply(this, arguments);
-                this._super = tmp;
+                        // The method only need to be bound temporarily, so we
+                        // remove it when we're done executing
+                        var ret = fn.apply(this, arguments);
+                        this._super = tmp;
 
-                return ret;
-            };
-        })(name, prop[name]) :
-        prop[name];
+                        return ret;
+                    };
+                })(name, prop[name]) :
+                prop[name];
         }
 
         // The dummy class constructor
         function Class() {
             // All construction is actually done in the init method
-            if (!initializing && this.init)
+            if (!initializing && this.init) {
                 this.init.apply(this, arguments);
+            }
         }
 
         // Populate our constructed prototype object

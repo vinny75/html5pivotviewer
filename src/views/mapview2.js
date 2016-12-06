@@ -117,13 +117,15 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
             $('.pv-toolbarpanel-timelineselector').fadeOut();
             $('.pv-toolbarpanel-zoomslider').fadeOut();
             $('.pv-toolbarpanel-maplegend').fadeIn();
-            if (!selectedItem)
-                $('.pv-mapview-legend').show('slide', {direction: 'up'});
+            if (!selectedItem)                {
+$('.pv-mapview-legend').show('slide', {direction: 'up'});
+}
             $('.pv-toolbarpanel-zoomcontrols').css('border-width', '0');
             $('#MAIN_BODY').css('overflow', 'auto');
             $('.pv-mapview-canvas').fadeIn(function(){
-                if (selectedItem)
-                    $.publish("/PivotViewer/Views/Item/Selected", [{id: selectedItem.Id, bkt: 0}]);
+                if (selectedItem)                    {
+$.publish("/PivotViewer/Views/Item/Selected", [{id: selectedItem.Id, bkt: 0}]);
+}
             });
         }
 
@@ -146,8 +148,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
 
         //Clear legend info in toolbar
         $('.pv-toolbarpanel-maplegend').empty();
-        if (!changingView && !selectedItem) 
-            $('.pv-mapview-legend').show('slide', {direction: 'up'});
+        if (!changingView && !selectedItem)             {
+$('.pv-mapview-legend').show('slide', {direction: 'up'});
+}
 
         //Check for geometry facet
         //This should contain a geometry definition im WKT that applies to the whole collection
@@ -201,8 +204,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                     //Have we cached the item location?
                     for (var c = 0; c < this.locList.length; c ++) {
                         if (this.locList[c].id == itemId) {
-                            if (this.locList[c].loc.lat != 0 || this.locList[c].loc.lng != 0) 
-                                this.inScopeLocList.push(this.locList[c]);
+                            if (this.locList[c].loc.lat != 0 || this.locList[c].loc.lng != 0)                                 {
+this.inScopeLocList.push(this.locList[c]);
+}
                             inCache = true;
                             break;
                         }
@@ -214,12 +218,13 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                             if (this.tiles[j].facetItem.Facets[k].Name.toUpperCase().indexOf("LATITUDE") >= 0) {
                                 //If multiple values just use the first one for now...
                                 var facetType = this.GetFacetCategoryType (this.tiles[j].facetItem.Facets[k].Name);
-                                if (facetType == "String")
-                                  latitude = parseFloat(this.tiles[j].facetItem.Facets[k].FacetValues[0].Value);
-                                else if (facetType == "Number") 
-                                  latitude = this.tiles[j].facetItem.Facets[k].FacetValues[0].Value;
-                                else
-                                  break;
+                                if (facetType == "String")                                  {
+latitude = parseFloat(this.tiles[j].facetItem.Facets[k].FacetValues[0].Value);
+}                                else if (facetType == "Number")                                   {
+latitude = this.tiles[j].facetItem.Facets[k].FacetValues[0].Value;
+}                                else                                  {
+break;
+}
                                 gotLatitude = true;
                                 if (gotLongitude) {
                                     var newLoc = new L.LatLng(latitude, longitude);
@@ -228,15 +233,15 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                                     gotLocation = true;
                                     break;
                                 }
-                            }
-                            else if (this.tiles[j].facetItem.Facets[k].Name.toUpperCase().indexOf("LONGITUDE") >= 0) {
+                            }                            else if (this.tiles[j].facetItem.Facets[k].Name.toUpperCase().indexOf("LONGITUDE") >= 0) {
                                 var facetType = this.GetFacetCategoryType (this.tiles[j].facetItem.Facets[k].Name);
-                                if (facetType == "String")
-                                  longitude = parseFloat(this.tiles[j].facetItem.Facets[k].FacetValues[0].Value);
-                                else if (facetType == "Number") 
-                                  longitude = this.tiles[j].facetItem.Facets[k].FacetValues[0].Value;
-                                else
-                                  break;
+                                if (facetType == "String")                                  {
+longitude = parseFloat(this.tiles[j].facetItem.Facets[k].FacetValues[0].Value);
+}                                else if (facetType == "Number")                                   {
+longitude = this.tiles[j].facetItem.Facets[k].FacetValues[0].Value;
+}                                else                                  {
+break;
+}
                                 gotLongitude = true;
                                 if (gotLatitude) {
                                     var newLoc = new L.LatLng(latitude, longitude);
@@ -269,8 +274,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                                                    gotLocation = true;
                                                    break;
                                                }
-                                           } else
-                                               invalidCoordinates = true;
+                                           } else                                               {
+invalidCoordinates = true;
+}
                                        //at this point silverlight version checks for other stuff
                                        }  else if (value.indexOf(",") > -1 ) {
                                            //Could be a co-ordinate pair
@@ -283,8 +289,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                                                inScopeList.push({id: itemId, loc: newLoc, title: itemName});
                                                gotLocation = true;
                                                break;
-                                           } else
-                                               invalidCoordinates = true;
+                                           } else                                               {
+invalidCoordinates = true;
+}
                                       }
                                       if (!invalidCoordinates) {
                                           //If we get here then we still have not got a location
@@ -299,8 +306,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                                               for (var r = 0; r < this.tiles[j].facetItem.Facets.length; r++) {
                                                   if (this.tiles[j].facetItem.Facets[r].Name.toUpperCase().indexOf("REGION") >= 0) {
                                                       var region = this.tiles[j].facetItem.Facets[r].FacetValues[0].Value;
-                                                      if (region.length > 1)
-                                                          geoLoc = geoLoc + ", " + region.replace('_', ' ').toUpperCase();
+                                                      if (region.length > 1)                                                          {
+geoLoc = geoLoc + ", " + region.replace('_', ' ').toUpperCase();
+}
                                                       break;
                                                   }
                                               }
@@ -309,8 +317,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                                                   if (this.tiles[j].facetItem.Facets[s].Name.toUpperCase().indexOf("COUNTRY") >= 0) {
                                   
                                                       var country = this.tiles[j].facetItem.Facets[s].FacetValues[0].Value;
-                                                      if (country.length > 1)
-                                                          geoLoc = geoLoc + ", " + country.replace('_', ' ').toUpperCase();
+                                                      if (country.length > 1)                                                          {
+geoLoc = geoLoc + ", " + country.replace('_', ' ').toUpperCase();
+}
                                                       break;
                                                   }
                                               }
@@ -367,8 +376,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                                        } //Not invalid co-ordinates 
                                    } //Go through location values v
                                    //Found a value in a location facet
-                                   if (gotLocation)
-                                       break;
+                                   if (gotLocation)                                       {
+break;
+}
                                }// Facet is LOCATION
                             } //loop through facets f
                         } //Not got co-ordinate - will need to geocode
@@ -387,20 +397,25 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
         } //else {
             $('.pv-mapview-canvas').css('height', this.height - 12 + 'px');
             $('.pv-mapview-canvas').css('width', this.width - 415 + 'px');
-            if (selectedItem)
-                this.CreateMap(selectedItem.Id);
-            else
-                this.CreateMap("");
+            if (selectedItem)                {
+this.CreateMap(selectedItem.Id);
+}            else                {
+this.CreateMap("");
+}
         //}
     },
-    GetUI: function () { return ''; },
+    GetUI: function () {
+ return ''; 
+},
     GetButtonImage: function () {
         return 'images/MapView.png';
     },
     GetButtonImageSelected: function () {
         return 'images/MapViewSelected.png';
     },
-    GetViewName: function () { return 'Map View 2'; },
+    GetViewName: function () {
+ return 'Map View 2'; 
+},
     MakeGeocodeCallBack: function(locName) {
         var that = this;
         if (this.geocodeService == "Google"){
@@ -412,8 +427,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                     var googleLoc = results[0].geometry.location;
                     var lat = googleLoc.lat();
                     var lon = googleLoc.lng();
-                    if (lat && lon)
-                      loc = new L.LatLng(lat, lon);
+                    if (lat && lon)                      {
+loc = new L.LatLng(lat, lon);
+}
                 }
 
                 // Add to local cache
@@ -433,8 +449,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                     var title = that.itemsToGeocode[i].title;
                     if (value == locName) {
                         that.locList.push({id: itemId, loc:loc, title: title});
-                        if (loc.lat != 0 || loc.lng != 0)
-                             that.inScopeLocList.push({id:itemId, loc:loc, title: title});
+                        if (loc.lat != 0 || loc.lng != 0)                             {
+that.inScopeLocList.push({id:itemId, loc:loc, title: title});
+}
                     }
                 }
        
@@ -468,8 +485,7 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                 }
        
                 // If the geocodeResults array is totally filled, make the pins.
-                if (doneGeocoding || that.geocodeList.Count == 0)
-                {
+                if (doneGeocoding || that.geocodeList.Count == 0)                {
                    //change cursor back ?
                    that.geocodeList = [];
                    if (that.inScopeLocList.Count == 0) {
@@ -494,8 +510,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                 if (place) {
                     var lat = $(place).attr("lat");
                     var lon = $(place).attr("lon");
-                    if (lat && lon)
-                      loc = new L.LatLng(lat, lon);
+                    if (lat && lon)                      {
+loc = new L.LatLng(lat, lon);
+}
                 }
 
                 // Add to local cache
@@ -515,8 +532,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                     var title = that.itemsToGeocode[i].title;
                     if (value == locName) {
                         that.locList.push({id: itemId, loc:loc, title: title});
-                        if (loc.lat != 0 || loc.lng != 0)
-                             that.inScopeLocList.push({id:itemId, loc:loc, title: title});
+                        if (loc.lat != 0 || loc.lng != 0)                             {
+that.inScopeLocList.push({id:itemId, loc:loc, title: title});
+}
                     }
                 }
        
@@ -549,8 +567,7 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                 }
        
                 // If the geocodeResults array is totally filled, make the pins.
-                if (doneGeocoding || that.geocodeList.Count == 0)
-                {
+                if (doneGeocoding || that.geocodeList.Count == 0)                {
                    //change cursor back ?
                    that.geocodeList = [];
                    if (that.inScopeLocList.Count == 0) {
@@ -617,8 +634,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
             gotLoc = true;
         }
         bookmarkZoom = parseInt(this.mapZoom);
-        if (!isNaN(bookmarkZoom)) 
-            zoom = bookmarkZoom;
+        if (!isNaN(bookmarkZoom))             {
+zoom = bookmarkZoom;
+}
 
         // Currently map type not supported in this view
         //if (this.mapType && this.mapType != "")
@@ -635,14 +653,17 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
 	var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});		
 */
 
-        if (gotLoc)
-	    this.map.setView(centreLoc,zoom);
+        if (gotLoc)	    {
+this.map.setView(centreLoc,zoom);
+}
             //this.map.panTo(centreLoc);
-        else
-	    this.map.setView(new L.LatLng(0,0),zoom);
+        else	    {
+this.map.setView(new L.LatLng(0,0),zoom);
+}
 
-        if (this.selectedItemId) 
-            this.CentreOnSelected (this.selectedItemId);
+        if (this.selectedItemId)             {
+this.CentreOnSelected (this.selectedItemId);
+}
 
         //Add geometry to map using wicket library for reading WKT
         var geometryOK = true;
@@ -666,8 +687,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                 for (var o = 0; o < obj.length; o++) { 
                     this.map.addLayer(obj[o]);
                 }
-            } else 
-                this.map.addLayer(obj);
+            } else                 {
+this.map.addLayer(obj);
+}
         }
 
 	this.map.addLayer(this.osm);
@@ -696,8 +718,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
     },
     GetFacetCategoryType: function (name) {
         for (i = 0; i < this.categories.length; i++) {
-            if (this.categories[i].Name == name)
-                return this.categories[i].Type;
+            if (this.categories[i].Name == name)                {
+return this.categories[i].Type;
+}
         }
         // should never get here...
         return "not set";
@@ -707,8 +730,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
     },
     GetBucketNumber: function (id) {
         for (var i = 0; i < this.buckets.length; i++) {
-            if ($.inArray(id, this.buckets[i].Ids) >= 0) 
-                return i;
+            if ($.inArray(id, this.buckets[i].Ids) >= 0)                 {
+return i;
+}
         }
         return 0;
     },
@@ -760,10 +784,11 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                 $('.pv-toolbarpanel-maplegend').css( 'text-overflow', 'ellipsis');
                 var toolbarContent;
                 toolbarContent = "<img style='height:15px;width:auto' src='" + marker._icon.src + "'></img>";
-                if (that.buckets[bucket].startRange == that.buckets[bucket].endRange)
-                  toolbarContent += that.buckets[bucket].startRange; 
-                else
-                  toolbarContent += that.buckets[bucket].startRange + " to " + that.buckets[bucket].endRange; 
+                if (that.buckets[bucket].startRange == that.buckets[bucket].endRange)                  {
+toolbarContent += that.buckets[bucket].startRange;
+}                 else                  {
+toolbarContent += that.buckets[bucket].startRange + " to " + that.buckets[bucket].endRange;
+} 
                 $('.pv-toolbarpanel-maplegend').append(toolbarContent);
             }
 
@@ -790,10 +815,11 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                                 $('.pv-toolbarpanel-maplegend').empty();
                                 var toolbarContent;
                                 toolbarContent = "<img style='height:15px;width:auto' src='" + marker._icon.src + "'></img>";
-                                if (that.buckets[bucket].startRange == that.buckets[bucket].endRange)
-                                  toolbarContent += that.buckets[bucket].startRange; 
-                                else
-                                  toolbarContent += that.buckets[bucket].startRange + " to " + that.buckets[bucket].endRange; 
+                                if (that.buckets[bucket].startRange == that.buckets[bucket].endRange)                                  {
+toolbarContent += that.buckets[bucket].startRange;
+}                                 else                                  {
+toolbarContent += that.buckets[bucket].startRange + " to " + that.buckets[bucket].endRange;
+} 
                                 $('.pv-toolbarpanel-maplegend').append(toolbarContent);
                                 $.publish("/PivotViewer/Views/Update/GridSelection", [{selectedItem: that.selectedItemId,  selectedTile: selectedTile}]);
                                 break;
@@ -834,8 +860,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
         var width = mapSize.x;
         var height = mapSize.y;
         if (this.overlayBaseImageUrl != "") {
-          if (this.overlay && this.map.hasLayer(this.overlay)) 
-              this.map.removeLayer(this.overlay);
+          if (this.overlay && this.map.hasLayer(this.overlay))               {
+this.map.removeLayer(this.overlay);
+}
           var overlayImageUrl = this.overlayBaseImageUrl+ "&bbox=" + west + "," + south + "," + east + "," + north + "&width=" + width + "&height=" + height ;
           this.overlay = new L.imageOverlay (overlayImageUrl, mapBounds, {opacity: 0.4});
           this.overlay.addTo(this.map);
@@ -846,8 +873,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
         var areaWkt = new Wkt.Wkt();
 
         //clear existing area object
-        if (this.areaObj)
-          this.map.removeLayer(this.areaObj);
+        if (this.areaObj)          {
+this.map.removeLayer(this.areaObj);
+}
         for (var i = 0; i < this.areaValues.length; i++) {
            if (this.areaValues[i].id == selectedItemId) {
               areaValue = this.areaValues[i].area;
@@ -875,8 +903,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                     for (var o = 0; o < this.areaObj.length; o++) { 
                         this.map.addLayer(this.areaObj[o]);
                     }
-                } else 
-                    this.map.addLayer(this.areaObj);
+                } else                     {
+this.map.addLayer(this.areaObj);
+}
             }
         }
     },
@@ -944,8 +973,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
     CentreOnSelected: function (selectedItemId) {
         for (j = 0; j <  this.locList.length; j++) {
             if (this.locList[j].id == selectedItemId) {
-                if (this.locList[j].loc.lat != 0 && this.locList[j].loc.lng != 0)
-                    this.map.panTo(this.locList[j].loc);
+                if (this.locList[j].loc.lat != 0 && this.locList[j].loc.lng != 0)                    {
+this.map.panTo(this.locList[j].loc);
+}
             }
         }
     },
@@ -963,14 +993,16 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
             gotLoc = true;
         }
         bookmarkZoom = parseInt(this.mapInitZoom);
-        if (!isNaN(bookmarkZoom)) 
-            zoom = bookmarkZoom;
+        if (!isNaN(bookmarkZoom))             {
+zoom = bookmarkZoom;
+}
 
         //if (this.mapInitType && this.mapInitType != "")
         //    type = this.mapInitType;
 
-        if (gotLoc)
-            this.map.panTo(centreLoc);
+        if (gotLoc)            {
+this.map.panTo(centreLoc);
+}
         //this.map.setMapTypeId(type);
         this.map.setZoom(zoom);
     },
@@ -986,10 +1018,11 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
         for (var i = 0; i < this.buckets.length; i++) {
             var icon = new this.icons[i];
             tableContent += "<tr><td><img src='" + icon.options.iconUrl + "'></img></td>";
-            if (this.buckets[i].startRange == this.buckets[i].endRange)
-              tableContent += "<td><div style='overflow:hidden;white-space:nowrap;width:" + width + "px;text-overflow:ellipsis'>" + this.buckets[i].startRange + "</div></td></tr>"; 
-            else
-              tableContent += "<td><div style='overflow:hidden;white-space:nowrap;width:" + width + "px;text-overflow:ellipsis'>" + this.buckets[i].startRange + " to " + this.buckets[i].endRange + "</div></td></tr>"; 
+            if (this.buckets[i].startRange == this.buckets[i].endRange)              {
+tableContent += "<td><div style='overflow:hidden;white-space:nowrap;width:" + width + "px;text-overflow:ellipsis'>" + this.buckets[i].startRange + "</div></td></tr>";
+}             else              {
+tableContent += "<td><div style='overflow:hidden;white-space:nowrap;width:" + width + "px;text-overflow:ellipsis'>" + this.buckets[i].startRange + " to " + this.buckets[i].endRange + "</div></td></tr>";
+} 
         }
         tableContent +="</table>";
         $('.pv-mapview-legend').append(tableContent);
@@ -1011,13 +1044,15 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
 //this needs fixing to handle the whole range...
                                 if (bkts[k].startRange == val) {
                                     // If item is not already in the bucket add it
-                                    if ($.inArray(dzTiles[i].facetItem.Id, bkts[k].Ids) < 0)
-                                        bkts[k].Ids.push(dzTiles[i].facetItem.Id);
+                                    if ($.inArray(dzTiles[i].facetItem.Id, bkts[k].Ids) < 0)                                        {
+bkts[k].Ids.push(dzTiles[i].facetItem.Id);
+}
                                     found = true;
                                 }
                             }
-                            if (!found)
-                                bkts.push({ startRange: val, endRange: val, Ids: [dzTiles[i].facetItem.Id], Values: [val] });
+                            if (!found)                                {
+bkts.push({ startRange: val, endRange: val, Ids: [dzTiles[i].facetItem.Id], Values: [val] });
+}
 
                             hasValue = true;
                         }
@@ -1034,8 +1069,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
                             found = true;
                         }
                     }
-                    if (!found)
-                        bkts.push({ startRange: val, endRange: val, Ids: [dzTiles[i].facetItem.Id], Values: [val] });
+                    if (!found)                        {
+bkts.push({ startRange: val, endRange: val, Ids: [dzTiles[i].facetItem.Id], Values: [val] });
+}
                 }
             }
         }
@@ -1054,8 +1090,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
 	        var filterValues = stringFacets[sortIndex].facetValue;
 	        for ( var b = 0; b < bkts.length; b ++ ) {
 		    var valueIndex = $.inArray(bkts[b].startRange, filterValues ); 
-		    if (valueIndex >= 0 )
-		        newBktsArray.push(bkts[b]);
+		    if (valueIndex >= 0 )		        {
+newBktsArray.push(bkts[b]);
+}
 	        }
 	        bkts = newBktsArray;
 	    }
@@ -1066,15 +1103,18 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
             if (current < bkts.length - 1) {
                 bkts[current].endRange = bkts[current + 1].endRange;
                 for (var i = 0; i < bkts[current + 1].Ids.length; i++) {
-                    if ($.inArray(bkts[current+1].Ids[i], bkts[current].Ids) < 0) 
-                        bkts[current].Ids.push(bkts[current + 1].Ids[i]);
-                        if ($.inArray(bkts[current + 1].endRange, bkts[current].Values) < 0) 
-                            bkts[current].Values.push(bkts[current + 1].endRange);
+                    if ($.inArray(bkts[current+1].Ids[i], bkts[current].Ids) < 0)                         {
+bkts[current].Ids.push(bkts[current + 1].Ids[i]);
+}
+                        if ($.inArray(bkts[current + 1].endRange, bkts[current].Values) < 0)                             {
+bkts[current].Values.push(bkts[current + 1].endRange);
+}
                 }
                 bkts.splice(current + 1, 1);
                 current++;
-            } else
-                current = 0;
+            } else                {
+current = 0;
+}
         }
 
         return bkts;
@@ -1088,8 +1128,9 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
 				if (x.facetItem.Facets[i].Name == field && x.facetItem.Facets[i].FacetValues.length > 0) {
                                     // If a numeric value could check if value is within filter 
                                     // bounds but will have been done already
-                                    if ($.isNumeric(x.facetItem.Facets[i].FacetValues[0].Value) )
-				            return primer(x.facetItem.Facets[i].FacetValues[0].Value);
+                                    if ($.isNumeric(x.facetItem.Facets[i].FacetValues[0].Value) )				            {
+return primer(x.facetItem.Facets[i].FacetValues[0].Value);
+}
                                     // If a string facet then could have a number of values.  Only
                                     // sort on values in the filter 
                                     else {                      

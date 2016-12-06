@@ -19,7 +19,7 @@
 /// Retrieves and caches images
 ///
 PivotViewer.Views.SimpleImageController = PivotViewer.Views.IImageController.subClass({
-    init: function () {
+    init: function() {
 
         this._items = [];
         this._collageItems = [];
@@ -35,100 +35,101 @@ PivotViewer.Views.SimpleImageController = PivotViewer.Views.IImageController.sub
         var that = this;
 
         //Events
-        $.subscribe("/PivotViewer/ImageController/Zoom", function (evt) {
+        $.subscribe("/PivotViewer/ImageController/Zoom", function(evt) {
             that._zooming = evt;
         });
     },
-    Setup: function (baseUrl) {
+    Setup: function(baseUrl) {
         //get base URL
         this._baseUrl = baseUrl;
         var that = this;
 
         // get list of image files
         $.getJSON(baseUrl + "/imagelist.json")
-        .done (function (images) {
-            // for each item in the collection get the image filename
-            for (var i = 0; i < images.ImageFiles.length; i++) {
-                var img = new Image(); 
+            .done(function(images) {
+                // for each item in the collection get the image filename
+                for (var i = 0; i < images.ImageFiles.length; i++) {
+                    var img = new Image();
 
-                img.onload = function() {
-                    for (var i = 0; i < that._items.length; i++) {
-                        if (that._items[i].Images[0] == this) {
-                            that._items[i].Width = this.width;
-                            that._items[i].Height = this.height;
-                            that._loadedCount ++;
-                        }
-                        if (that._loadedCount == that._items.length) 
-                            $.publish("/PivotViewer/ImageController/Collection/Loaded", null);
+                    img.onload = function() {
+                        for (var i = 0; i < that._items.length; i++) {
+                            if (that._items[i].Images[0] == this) {
+                                that._items[i].Width = this.width;
+                                that._items[i].Height = this.height;
+                                that._loadedCount++;
+                            }
+                            if (that._loadedCount == that._items.length) {
+                                $.publish("/PivotViewer/ImageController/Collection/Loaded", null);
+                            }
                         }
                     };
 
-                img.src = that._baseUrl + "/" + images.ImageFiles[i];
-                that._items.push(new PivotViewer.Views.SimpleImageItem(images.ImageFiles[i], that._baseUrl, img.width, img.height, img));
-           }
-        })
-        .fail (function (jqxhr, textStatus, errorThrown) {
-            //Make sure throbber is removed else everyone thinks the app is still running
-            $('.pv-loading').remove();
+                    img.src = that._baseUrl + "/" + images.ImageFiles[i];
+                    that._items.push(new PivotViewer.Views.SimpleImageItem(images.ImageFiles[i], that._baseUrl, img.width, img.height, img));
+                }
+            })
+            .fail(function(jqxhr, textStatus, errorThrown) {
+                //Make sure throbber is removed else everyone thinks the app is still running
+                $('.pv-loading').remove();
 
-            //Throw an alert so the user knows something is wrong
-            var msg = '';
-            msg = msg + 'Error loading image files<br><br>';
-            msg = msg + 'URL        : ' + this.url + '<br>';
-            msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
-            msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
-            msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-            PivotViewer.Utils.ModalDialog(msg); 
-        });
+                //Throw an alert so the user knows something is wrong
+                var msg = '';
+                msg = msg + 'Error loading image files<br><br>';
+                msg = msg + 'URL        : ' + this.url + '<br>';
+                msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
+                msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
+                msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
+                PivotViewer.Utils.ModalDialog(msg);
+            });
     },
 
     // Simple images just ignore the level - same image is used whatever the zoom
-    GetImages: function (id, width, height) {
-      // Only return image if size is big enough 
-      if (width > 8 && height > 8) {
-        for (var i = 0;  this._items.length; i++){
-          if (this._items[i].ImageId == id) {
-            return this._items[i].Images; 
-          }
+    GetImages: function(id, width, height) {
+        // Only return image if size is big enough 
+        if (width > 8 && height > 8) {
+            for (var i = 0; this._items.length; i++) {
+                if (this._items[i].ImageId == id) {
+                    return this._items[i].Images;
+                }
+            }
         }
-      }
-      return null;
+        return null;
     },
-    GetWidthForImage: function( id, height ) {
+    GetWidthForImage: function(id, height) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ImageId == id) {
-               return Math.floor(height / (this._items[i].Height/this._items[i].Width));
+                return Math.floor(height / (this._items[i].Height / this._items[i].Width));
             }
         }
     },
-    GetWidth: function( id ) {
+    GetWidth: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ImageId == id) {
-               return this._items[i].Width;
+                return this._items[i].Width;
             }
         }
     },
-    GetHeight: function( id ) {
+    GetHeight: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ImageId == id) {
-               return this._items[i].Height;
+                return this._items[i].Height;
             }
         }
     },
-    GetRatio: function( id ) {
+    GetRatio: function(id) {
         for (var i = 0; i < this._items.length; i++) {
             if (this._items[i].ImageId == id) {
-               return this._items[i].Height/this._items[i].Width;
+                return this._items[i].Height / this._items[i].Width;
             }
         }
     }
 });
 
 PivotViewer.Views.SimpleImageItem = Object.subClass({
-    init: function (ImageId, BasePath, width, height, img) {
+    init: function(ImageId, BasePath, width, height, img) {
         this.ImageId = ImageId,
-        this.BasePath = BasePath,
-        this.Images = [img];
+            this.BasePath = BasePath,
+            this.Images = [img];
         this.Width = width;
         this.Height = height;
     }

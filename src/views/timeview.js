@@ -53,8 +53,9 @@ PivotViewer.Views.TimeView = PivotViewer.Views.IPivotViewerView.subClass({
             $('.pv-toolbarpanel-zoomcontrols').css('border-width', '0');
             $('.pv-timeview-canvas').fadeIn();
             $('.pv-timeview-canvas').fadeIn(function(){
-                if (selectedItem)
-                    $.publish("/PivotViewer/Views/Item/Selected", [{id: selectedItem.Id, bkt: 0}]);
+                if (selectedItem)                    {
+$.publish("/PivotViewer/Views/Item/Selected", [{id: selectedItem.Id, bkt: 0}]);
+}
      
             });
             $('#MAIN_BODY').css('overflow', 'hidden');
@@ -78,10 +79,11 @@ PivotViewer.Views.TimeView = PivotViewer.Views.IPivotViewerView.subClass({
         $('.pv-toolbarpanel-timelineselector').empty();
         var facetSelectControl = "<select id='pv-timeline-selectcontrol' style='width:126px'>";
         for (var facet = 0; facet < this.timeFacets.length; facet++) {
-            if (facet == this.selectedFacet) 
-                facetSelectControl += "<option selected='selected' value='" + this.timeFacets[facet].name + "'>" + this.timeFacets[facet].name + "</option>";
-            else 
-                facetSelectControl += "<option value='" + this.timeFacets[facet].name + "'>" + this.timeFacets[facet].name + "</option>";
+            if (facet == this.selectedFacet)                 {
+facetSelectControl += "<option selected='selected' value='" + this.timeFacets[facet].name + "'>" + this.timeFacets[facet].name + "</option>";
+}            else                 {
+facetSelectControl += "<option value='" + this.timeFacets[facet].name + "'>" + this.timeFacets[facet].name + "</option>";
+}
         }
         facetSelectControl += "</select>";
         $('.pv-toolbarpanel-timelineselector').append(facetSelectControl);
@@ -166,7 +168,9 @@ PivotViewer.Views.TimeView = PivotViewer.Views.IPivotViewerView.subClass({
         this.timeline.showLoadingMessage();
 
         Timeline.loadJSON("timeline.json",
-              function(json, url) { eventSource.loadJSON(json,url); });
+              function(json, url) {
+ eventSource.loadJSON(json,url); 
+});
 
         // dismiss loading message
         this.timeline.hideLoadingMessage();
@@ -181,14 +185,18 @@ PivotViewer.Views.TimeView = PivotViewer.Views.IPivotViewerView.subClass({
             }
         }
     },
-    GetUI: function () { return ''; },
+    GetUI: function () {
+ return ''; 
+},
     GetButtonImage: function () {
         return 'images/TimeView.png';
     },
     GetButtonImageSelected: function () {
         return 'images/TimeViewSelected.png';
     },
-    GetViewName: function () { return 'Time View'; },
+    GetViewName: function () {
+ return 'Time View'; 
+},
     CreateEventsData: function () { 
         // Empty the events array.
         this.timeFacets = [];
@@ -253,8 +261,9 @@ PivotViewer.Views.TimeView = PivotViewer.Views.IPivotViewerView.subClass({
     },
     GetFacetCategoryType: function (name) {
         for (i = 0; i < this.categories.length; i++) {
-            if (this.categories[i].Name == name)
-                return this.categories[i].Type;
+            if (this.categories[i].Name == name)                {
+return this.categories[i].Type;
+}
         }
         // should never get here...
         return "not set";
@@ -287,18 +296,20 @@ PivotViewer.Views.TimeView = PivotViewer.Views.IPivotViewerView.subClass({
             for (var item = 0; item < this.timeFacets[facet].eventsData.length; item++) {
                 if (this.timeFacets[facet].eventsData[item]._id == this.selectedItemId) {
                     this.timeFacets[facet].eventsData[item]._icon = "scripts/timeline_js/images/dark-red-circle.png";
-                } else 
-                    this.timeFacets[facet].eventsData[item]._icon = "scripts/timeline_js/images/blue-circle.png";
+                } else                     {
+this.timeFacets[facet].eventsData[item]._icon = "scripts/timeline_js/images/blue-circle.png";
+}
             }
         }
 
         this.RefreshView();
     },
     SetSelectedFacet: function (facet) {
-        if (!facet)
-            this.selectedFacet = 0;
-        else  
-            this.selectedFacet = facet;
+        if (!facet)            {
+this.selectedFacet = 0;
+}        else              {
+this.selectedFacet = facet;
+}
     },
     GetSelectedFacet: function () {
         return this.selectedFacet;
