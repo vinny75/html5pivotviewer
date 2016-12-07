@@ -58,8 +58,12 @@ PivotViewer.Utils.Histogram = function(values) {
 	var x;
 	for (var i = 1, n = values.length; i < n; ++i) {
 		x = values[i];
-		if (x < min) min = x;
-		if (x > max) max = x;
+		if (x < min) {
+			min = x;
+		}
+		if (x > max) {
+			max = x;
+		}
 	}		
 
     var bins = (Math.floor(Math.pow(2 * values.length, 1 / 3)) + 1) * 2;
