@@ -19,18 +19,6 @@ Debug.Log = function(message) {
     }
 };
 
-//Gets the next 'frame' from the browser (there are several methods) and controls the frame rate
-window.requestAnimFrame = (function(callback) {
-    return window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        function(callback) {
-            window.setTimeout(callback, 1000 / 60);
-        };
-})();
-
 PivotViewer.Utils.EscapeMetaChars = function(jQuerySelector) {
     //!"#$%&'()*+,./:;<=>?@[\]^`{|}~
     return jQuerySelector
@@ -59,14 +47,6 @@ PivotViewer.Utils.EscapeItemId = function(itemId) {
 PivotViewer.Utils.HtmlSpecialChars = function(orig) {
     return jQuery('<div />').text(orig).html();
 }
-
-PivotViewer.Utils.Now = function() {
-    if (Date.now) {
-        return Date.now();
-    } else {
-        return (new Date().getTime());
-    }
-};
 
 // Provided the minimum number is < 1000000
 PivotViewer.Utils.Min = function(values) {

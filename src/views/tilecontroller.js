@@ -60,7 +60,7 @@ PivotViewer.Views.TileController = Object.subClass({
             for (var i = 0; i < this._tiles.length; i++) {
                 //for each tile location...
                 for (l = 0; l < this._tiles[i]._locations.length; l++) {
-                    var now = PivotViewer.Utils.Now() - this._tiles[i].start,
+                    var now = Date.now() - this._tiles[i].start,
                         end = this._tiles[i].end - this._tiles[i].start;
                     //use the easing function to determine the next position
                     if (now <= end) {
@@ -200,7 +200,7 @@ PivotViewer.Views.TileController = Object.subClass({
 
         // request new frame
         if (!this._breaks) {
-            requestAnimFrame(function() {
+            requestAnimationFrame(function() {
                 that.AnimateTiles(doInitialSelection, selectedId);
             });
         } else {

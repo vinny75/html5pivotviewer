@@ -323,7 +323,7 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
                     //set outer location for all tiles not in the filter
                     if (filterindex < 0) {
                         that.SetOuterTileDestination(that.width, that.height, that.tiles[i]);
-                        that.tiles[i].start = PivotViewer.Utils.Now();
+                        that.tiles[i].start = Date.now();
                         that.tiles[i].end = that.tiles[i].start + 1000;
                     }
                 }
@@ -393,7 +393,7 @@ PivotViewer.Views.GridView = PivotViewer.Views.TileBasedView.subClass({
                 this.tiles[i].destinationheight = rowscols.TileHeight;
                 this.tiles[i]._locations[0].destinationx = (currentColumn * rowscols.TileMaxWidth) + offsetX;
                 this.tiles[i]._locations[0].destinationy = (currentRow * rowscols.TileHeight) + offsetY;
-                this.tiles[i].start = PivotViewer.Utils.Now();
+                this.tiles[i].start = Date.now();
                 this.tiles[i].end = this.tiles[i].start + miliseconds;
                 if (currentColumn == columns - 1) {
                     currentColumn = 0;

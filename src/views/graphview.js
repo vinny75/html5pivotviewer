@@ -309,7 +309,7 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
             //set outer location for all tiles not in the filter
             if (filterindex < 0) {
                 this.SetOuterTileDestination(this.width, this.height, this.tiles[i]);
-                this.tiles[i].start = PivotViewer.Utils.Now();
+                this.tiles[i].start = Date.now();
                 this.tiles[i].end = this.tiles[i].start + 1000;
             }
         }
@@ -410,7 +410,7 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
                         this.tiles[j].destinationheight = rowscols.TileHeight;
                         this.tiles[j]._locations[0].destinationx = (i * this.columnWidth) + (currentColumn * rowscols.TileMaxWidth) + offsetX;
                         this.tiles[j]._locations[0].destinationy = this.canvasHeightUIAdjusted - rowscols.TileHeight - (currentRow * rowscols.TileHeight) + offsetY;
-                        this.tiles[j].start = PivotViewer.Utils.Now();
+                        this.tiles[j].start = Date.now();
                         this.tiles[j].end = this.tiles[j].start + 1000;
                         this.tiles[j].firstFilterItemDone = true;
                     } else {
