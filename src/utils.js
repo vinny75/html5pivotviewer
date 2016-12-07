@@ -48,31 +48,19 @@ PivotViewer.Utils.HtmlSpecialChars = function(orig) {
     return jQuery('<div />').text(orig).html();
 }
 
-// Provided the minimum number is < 1000000
-PivotViewer.Utils.Min = function(values) {
-    var min = 1000000;
-    for (var i = 0, _iLen = values.length; i < _iLen; i++) {
-        min = min > values[i] ? values[i] : min;
-    }
-    return min;
-}
-
-// Provided the maximum number is > -1000000
-PivotViewer.Utils.Max = function(values) {
-    var max = -1000000;
-    for (var i = 0, _iLen = values.length; i < _iLen; i++) {
-        max = max < values[i] ? values[i] : max;
-    }
-    return max;
-}
-
 PivotViewer.Utils.Histogram = function(values) {
     if (!(values instanceof Array)) {
         return null;
     }
 
-    var min = PivotViewer.Utils.Min(values);
-    var max = PivotViewer.Utils.Max(values);
+    var min = values[0],
+		max = values[0];
+	var x;
+	for (var i = 1, n = values.length; i < n; ++i) {
+		x = values[i];
+		if (x < min) min = x;
+		if (x > max) max = x;
+	}		
 
     var bins = (Math.floor(Math.pow(2 * values.length, 1 / 3)) + 1) * 2;
     if (bins > 10) {
