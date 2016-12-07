@@ -45,7 +45,8 @@
         },
         _self = null,
         _nameMapping = {},
-        PivotCollection = new PivotViewer.Models.Collection();
+        PivotCollection = new PivotViewer.Models.Collection(),
+		defaults = {};
 
     var methods = {
         // PivotViewer can be initialised with these options:
@@ -54,102 +55,85 @@
         // ViewerState: Sets the filters, selected item and chosen view when the PivotViewer first opens
 
         init: function(options) {
+		
+			options = $.extend(true, {}, defaults, options);
             _self = this;
             _self.empty();
             _self.addClass('pv-wrapper');
             InitPreloader();
 
-            //Load default options from "defaults" file
-            $.getJSON("defaults")
-                .always(function(defaultOptions) {
-                    //ViewerState
-                    //http://i2.silverlight.net/content/pivotviewer/developer-info/api/html/P_System_Windows_Pivot_PivotViewer_ViewerState.htm
-                    if (options.ViewerState != undefined || defaultOptions.ViewerState != undefined) {
-                        var splitVS;
+			//ViewerState
+			//http://i2.silverlight.net/content/pivotviewer/developer-info/api/html/P_System_Windows_Pivot_PivotViewer_ViewerState.htm
+			if (options.ViewerState != undefined) {
+				var splitVS = options.ViewerState.split('&');
 
-                        if (options.ViewerState != undefined) {
-                            splitVS = options.ViewerState.split('&');
-                        } else {
-                            splitVS = defaultOptions.ViewerState.split('&');
-                        }
+				for (var i = 0, _iLen = splitVS.length; i < _iLen; i++) {
+					var splitItem = splitVS[i].split('=');
+					if (splitItem.length == 2) {
+						//Selected view
+						if (splitItem[0] == '$view$') {
+							_viewerState.View = parseInt(splitItem[1]) - 1;
+						//Sorted by									
+						} else if (splitItem[0] == '$facet0$') {
+							_viewerState.Facet = PivotViewer.Utils.EscapeItemId(splitItem[1]);
+						//Selected Item
+						} else if (splitItem[0] == '$selection$') {
+							_viewerState.Selection = PivotViewer.Utils.EscapeItemId(splitItem[1]);
+						//Table Selected Facet									
+						} else if (splitItem[0] == '$tableFacet$') {
+							_viewerState.TableFacet = PivotViewer.Utils.EscapeItemId(splitItem[1]);
+						//Filters									
+						} else {
+							var filter = {
+								Facet: splitItem[0],
+								Predicates: []
+							};
+							var filters = splitItem[1].split('_');
+							for (var j = 0, _jLen = filters.length; j < _jLen; j++) {
+								//var pred = filters[j].split('.');
+								if (filters[j].indexOf('.') > 0) {
+									var pred = filters[j].substring(0, filters[j].indexOf('.'));
+									var value = filters[j].substring(filters[j].indexOf('.') + 1);
+									//if (pred.length == 2)
+									filter.Predicates.push({
+										Operator: pred,
+										Value: value
+									});
+								}
+							}
+							_viewerState.Filters.push(filter);
+						}
+					}
+				}
+			}
 
-                        for (var i = 0, _iLen = splitVS.length; i < _iLen; i++) {
-                            var splitItem = splitVS[i].split('=');
-                            if (splitItem.length == 2) {
-                                //Selected view
-                                if (splitItem[0] == '$view$') {
-                                    _viewerState.View = parseInt(splitItem[1]) - 1;
-								//Sorted by									
-                                } else if (splitItem[0] == '$facet0$') {
-                                    _viewerState.Facet = PivotViewer.Utils.EscapeItemId(splitItem[1]);
-                                //Selected Item
-								} else if (splitItem[0] == '$selection$') {
-                                    _viewerState.Selection = PivotViewer.Utils.EscapeItemId(splitItem[1]);
-                                //Table Selected Facet									
-                                } else if (splitItem[0] == '$tableFacet$') {
-                                    _viewerState.TableFacet = PivotViewer.Utils.EscapeItemId(splitItem[1]);
-                                //Filters									
-                                } else {
-                                    var filter = {
-                                        Facet: splitItem[0],
-                                        Predicates: []
-                                    };
-                                    var filters = splitItem[1].split('_');
-                                    for (var j = 0, _jLen = filters.length; j < _jLen; j++) {
-                                        //var pred = filters[j].split('.');
-                                        if (filters[j].indexOf('.') > 0) {
-                                            var pred = filters[j].substring(0, filters[j].indexOf('.'));
-                                            var value = filters[j].substring(filters[j].indexOf('.') + 1);
-                                            //if (pred.length == 2)
-                                            filter.Predicates.push({
-                                                Operator: pred,
-                                                Value: value
-                                            });
-                                        }
-                                    }
-                                    _viewerState.Filters.push(filter);
-                                }
-                            }
-                        }
-                    }
+			//Collection loader
+			try {
+				if (options.Loader == undefined) {
+					throw "Collection loader is undefined.";
+				}
+				if (options.Loader instanceof PivotViewer.Models.Loaders.ICollectionLoader) {
+					options.Loader.LoadCollection(PivotCollection);
+				} else {
+					throw "Collection loader does not inherit from PivotViewer.Models.Loaders.ICollectionLoader.";
+				}
+			} catch (err) {
+				var msg = '';
+				msg = msg + err;
+				//Make sure throbber is removed else everyone thinks the app is still running
+				$('.pv-loading').remove();
 
-                    //Collection loader
-                    try {
-                        if (options.Loader == undefined && defaultOptions.Loader == undefined) {
-                            throw "Collection loader is undefined.";
-                        }
-                        if (options.Loader instanceof PivotViewer.Models.Loaders.ICollectionLoader) {
-                            options.Loader.LoadCollection(PivotCollection);
-                        } else if (defaultOptions.Loader instanceof PivotViewer.Models.Loaders.ICollectionLoader) {
-                            defaultOptions.Loader.LoadCollection(PivotCollection);
-                        } else {
-                            throw "Collection loader does not inherit from PivotViewer.Models.Loaders.ICollectionLoader.";
-                        }
-                    } catch (err) {
-                        var msg = '';
-                        msg = msg + err;
-                        //Make sure throbber is removed else everyone thinks the app is still running
-                        $('.pv-loading').remove();
+				PivotViewer.Utils.ModalDialog(msg);
+			}
 
-                        PivotViewer.Utils.ModalDialog(msg);
-                    }
-
-                    //Image controller
-                    if (options.ImageController == undefined && defaultOptions.ImageController == undefined) {
-                        _imageController = new PivotViewer.Views.DeepZoomImageController();
-                    } else if (options.ImageController instanceof PivotViewer.Views.IImageController) {
-                        _imageController = options.ImageController;
-                    } else if (defaultOptions.ImageController instanceof PivotViewer.Views.IImageController) {
-                        _imageController = defautlOptions.ImageController;
-                    } else {
-                        throw "Image Controller does not inherit from PivotViewer.Views.IImageController.";
-                    }
-
-                })
-                .fail(function(jqXHR, textStatus, error) {
-                    var err = textStatus + ", " + error;
-                    Debug.Log("Getting defaults file failed: " + err);
-                });
+			//Image controller
+			if (options.ImageController == undefined) {
+				_imageController = new PivotViewer.Views.DeepZoomImageController();
+			} else if (options.ImageController instanceof PivotViewer.Views.IImageController) {
+				_imageController = options.ImageController;
+			} else {
+				throw "Image Controller does not inherit from PivotViewer.Views.IImageController.";
+			}
         },
         show: function() {
             Debug.Log('Show');
