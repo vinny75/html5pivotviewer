@@ -8,6 +8,7 @@ var eslint = require('gulp-eslint');
 var fs = require('fs');
 var reporter = require('eslint-html-reporter');
 var beautify = require('gulp-beautify');
+var stripDebug = require('gulp-strip-debug');
  
 var jsSrc = [
 	'./src/namespaces.js',
@@ -49,6 +50,7 @@ gulp.task('scripts', function() {
         .pipe(concat('pivotviewer.js'))
         .pipe(gulp.dest(jsDest))
         .pipe(rename('pivotviewer.min.js'))
+		.pipe(stripDebug())
         .pipe(uglify())
         .pipe(gulp.dest(jsDest));		
 });

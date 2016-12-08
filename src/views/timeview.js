@@ -38,7 +38,7 @@ PivotViewer.Views.TimeView = PivotViewer.Views.IPivotViewerView.subClass({
     Filter: function (dzTiles, currentFilter, sortFacet, stringFacets, changingView, selectedItem) { 
         var that = this;
 
-        Debug.Log('Timeline View Filtered: ' + currentFilter.length);
+        console.log('Timeline View Filtered: ' + currentFilter.length);
 
         if (changingView) {
             $('.pv-viewarea-canvas').fadeOut();

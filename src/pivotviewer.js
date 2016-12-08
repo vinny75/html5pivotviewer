@@ -136,10 +136,10 @@
 			}
         },
         show: function() {
-            Debug.Log('Show');
+            console.log('Show');
         },
         hide: function() {
-            Debug.Log('Hide');
+            console.log('Hide');
         }
     };
 
@@ -781,7 +781,7 @@
         if (_viewerState.Facet != null) {
             $('.pv-toolbarpanel-sort option[value=' + CleanName(_viewerState.Facet) + ']').prop('selected', 'selected');
             _currentSort = $('.pv-toolbarpanel-sort :selected').attr('label');
-            Debug.Log('current sort ' + _currentSort);
+            console.log('current sort ' + _currentSort);
         }
 
         //Filters
@@ -880,7 +880,7 @@
         var foundItemsCount = [];
         var selectedFacets = [];
         var sort = $('.pv-toolbarpanel-sort option:selected').attr('label');
-        Debug.Log('sort ' + sort);
+        console.log('sort ' + sort);
 
         if (!changingView) {
             _selectedItem = "";
@@ -1902,7 +1902,7 @@
         //Sort change
         $('.pv-toolbarpanel-sort').on('change', function(e) {
             _currentSort = $('.pv-toolbarpanel-sort option:selected').attr('label');
-            Debug.Log('sort change _currentSort ' + _currentSort);
+            console.log('sort change _currentSort ' + _currentSort);
             FilterCollection(false);
         });
         //Facet sort
@@ -2295,7 +2295,7 @@
                     $.publish("/PivotViewer/Views/Canvas/Drag", [_mouseMove]);
                 }
             } catch (err) {
-                Debug.Log(err.message);
+                console.log(err.message);
             }
         });
         canvas.on("touchend", function(evt) {

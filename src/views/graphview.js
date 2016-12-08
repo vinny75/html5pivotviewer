@@ -219,7 +219,7 @@ PivotViewer.Views.GraphView = PivotViewer.Views.TileBasedView.subClass({
     Filter: function(dzTiles, currentFilter, sortFacet, stringFacets, changingView, changeViewSelectedItem) {
         var that = this;
 
-        Debug.Log('Graph View Filtered: ' + currentFilter.length);
+        console.log('Graph View Filtered: ' + currentFilter.length);
 
         this.changingView = false;
         if (changingView) {

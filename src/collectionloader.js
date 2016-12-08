@@ -86,7 +86,7 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
             url: this.CXMLUri,
             dataType: "xml",
             success: function(xml) {
-                Debug.Log('CXML loaded');
+                console.log('CXML loaded');
                 var collectionRoot = $(xml).find("Collection")[0];
                 var maxRelatedLinksLength = 0;
                 //get namespace local name

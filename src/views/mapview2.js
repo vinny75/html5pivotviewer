@@ -106,7 +106,7 @@ PivotViewer.Views.MapView2 = PivotViewer.Views.IPivotViewerView.subClass({
         var that = this;
         var g = 0;  //keeps track of the no. of geocode locations;
 
-        Debug.Log('Map View Filtered: ' + currentFilter.length);
+        console.log('Map View Filtered: ' + currentFilter.length);
 
         if (changingView) {
             $('.pv-viewarea-canvas').fadeOut();
@@ -675,7 +675,7 @@ this.CentreOnSelected (this.selectedItemId);
                 wkt.read(this.geometryValue.replace('\n', '').replace('\r', '').replace('\t', ''));
             } catch (e2) {
                 if (e2.name === 'WKTError') {
-                    Debug.Log('Wicket could not understand the WKT string you entered. Check that you have parentheses balanced, and try removing tabs and newline characters.');
+                    console.log('Wicket could not understand the WKT string you entered. Check that you have parentheses balanced, and try removing tabs and newline characters.');
                     //return;
                     geometryOK = false;
                 }
@@ -891,7 +891,7 @@ this.map.removeLayer(this.areaObj);
                     areaWkt.read(areaValue.replace('\n', '').replace('\r', '').replace('\t', ''));
                 } catch (e2) {
                     if (e2.name === 'WKTError') {
-                        Debug.Log('Wicket could not understand the WKT string you entered. Check that you have parentheses balanced, and try removing tabs and newline characters.');
+                        console.log('Wicket could not understand the WKT string you entered. Check that you have parentheses balanced, and try removing tabs and newline characters.');
                         //return;
                         geometryOK = false;
                     }

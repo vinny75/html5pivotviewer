@@ -13,12 +13,6 @@
 //  This software is licensed under the terms of the
 //  GNU General Public License v2 (see COPYING)
 //
-Debug.Log = function(message) {
-    if (window.console && window.console.log && typeof debug !== "undefined" && debug == true) {
-        window.console.log(message);
-    }
-};
-
 PivotViewer.Utils.EscapeMetaChars = function(jQuerySelector) {
     //!"#$%&'()*+,./:;<=>?@[\]^`{|}~
     return jQuerySelector

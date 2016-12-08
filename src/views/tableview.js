@@ -46,7 +46,7 @@ PivotViewer.Views.TableView = PivotViewer.Views.IPivotViewerView.subClass({
     Filter: function(dzTiles, currentFilter, sortFacet, stringFacets, changingView, selectedItem) {
         var that = this;
 
-        Debug.Log('Table View Filtered: ' + currentFilter.length);
+        console.log('Table View Filtered: ' + currentFilter.length);
 
         if (changingView) {
             $('.pv-viewarea-canvas').fadeOut();
@@ -95,7 +95,7 @@ PivotViewer.Views.TableView = PivotViewer.Views.IPivotViewerView.subClass({
         return 'Table View';
     },
     CellClick: function(columnId, cells) {
-        Debug.Log('CellClick');
+        console.log('CellClick');
         if (columnId == 'pv-key') {
             // selected item name need to get the id and publish selected event 
             //var selectedItemName = cells[0].innerHTML;
