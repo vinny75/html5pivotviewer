@@ -61,6 +61,7 @@ PivotViewer.Models.FacetCategory = Object.subClass({
         this.hourBuckets = [];
         this.minuteBuckets = [];
         this.secondBuckets = [];
+		this.items = [];
     }
 });
 
