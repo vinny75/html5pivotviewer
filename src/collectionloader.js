@@ -97,10 +97,7 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                     $('.pv-loading').remove();
 
                     //Display message so the user knows something is wrong
-                    var msg = '';
-                    msg = msg + 'Error parsing CXML Collection<br>';
-                    msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                    PivotViewer.Utils.ModalDialog(msg);
+                    PivotViewer.Utils.ModalDialog('Error parsing CXML Collection<br><br>Pivot Viewer cannot continue until this problem is resolved<br>');
                     throw "Error parsing CXML Collection";
                 }
 
@@ -166,9 +163,7 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                         $('.pv-loading').remove();
 
                         //Display a message so the user knows something is wrong
-                        var msg = '';
-                        msg = msg + 'There are no items in the CXML Collection<br><br>';
-                        PivotViewer.Utils.ModalDialog(msg);
+                        PivotViewer.Utils.ModalDialog('There are no items in the CXML Collection<br><br>');
                     } else {
                         for (var i = 0; i < facetItem.length; i++) {
                             var item = new PivotViewer.Models.Item(
@@ -295,18 +290,12 @@ PivotViewer.Models.Loaders.CXMLLoader = PivotViewer.Models.Loaders.ICollectionLo
                     $.publish("/PivotViewer/Models/Collection/Loaded", null);
                 }
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function(jqXHR, status, error) {
                 //Make sure throbber is removed else everyone thinks the app is still running
                 $('.pv-loading').remove();
 
                 //Display a message so the user knows something is wrong
-                var msg = '';
-                msg = msg + 'Error loading CXML Collection<br><br>';
-                msg = msg + 'URL        : ' + this.url + '<br>';
-                msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
-                msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
-                msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                PivotViewer.Utils.ModalDialog(msg);
+                PivotViewer.Utils.AjaxErrorModalDialog(jqXHR, status, error, this.url, "Error loading CXML Collection");
             }
         });
     }

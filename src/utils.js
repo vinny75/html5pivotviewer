@@ -104,6 +104,15 @@ PivotViewer.Utils.ModalDialog = function(msg, title) {
     }); //end confirm dialog
 };
 
+PivotViewer.Utils.AjaxErrorModalDialog = function(jqXHR, status, error, url, description) {
+	var msg = description + '<br><br>';
+	msg += 'URL        : ' + url + '<br>';
+	msg += 'Status : ' + jqXHR.status + ' ' + error + '<br>';
+	msg += 'Details    : ' + jqXHR.responseText + '<br>';
+	msg += '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
+	return PivotViewer.Utils.ModalDialog(msg);
+};
+
 // A simple class creation library.
 // From Secrets of the JavaScript Ninja
 // Inspired by base2 and Prototype

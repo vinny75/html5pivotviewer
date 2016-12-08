@@ -269,10 +269,7 @@ return this.categories[i].Type;
         return "not set";
     },
     ShowTimeError: function () {
-        var msg = '';
-        msg = msg + 'The current data selection does not contain any information that can be shown on a timeline<br><br>';
-        msg = msg + '<br>Choose a different view<br>';
-        PivotViewer.Utils.ModalDialog(msg); 
+        PivotViewer.Utils.ModalDialog('The current data selection does not contain any information that can be shown on a timeline<br><br><br>Choose a different view<br>'); 
         return;
     },
     RefreshView: function () {

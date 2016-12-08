@@ -58,10 +58,9 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
                     $('.pv-loading').remove();
 
                     //Throw an alert so the user knows something is wrong
-                    var msg = '';
-                    msg = msg + 'No items in the DeepZoom Collection<br><br>';
-                    msg = msg + 'URL        : ' + this.url + '<br>';
-                    msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
+                    var msg = 'No items in the DeepZoom Collection<br><br>';
+                    msg += 'URL        : ' + this.url + '<br>';
+                    msg += '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
                     PivotViewer.Utils.ModalDialog(msg);
                     return;
                 }
@@ -107,18 +106,12 @@ PivotViewer.Views.DeepZoomImageController = PivotViewer.Views.IImageController.s
                 //Loaded DeepZoom collection
                 $.publish("/PivotViewer/ImageController/Collection/Loaded", null);
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function(jqXHR, status, error) {
                 //Make sure throbber is removed else everyone thinks the app is still running
                 $('.pv-loading').remove();
 
                 //Throw an alert so the user knows something is wrong
-                var msg = '';
-                msg = msg + 'Error loading from DeepZoom Cache<br><br>';
-                msg = msg + 'URL        : ' + this.url + '<br>';
-                msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
-                msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
-                msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                PivotViewer.Utils.ModalDialog(msg);
+                PivotViewer.Utils.AjaxErrorModalDialog(jqXHR, status, error, this.url, "Error loading DeepZoom Cache");
             }
         });
     },
@@ -296,10 +289,10 @@ PivotViewer.Views.DeepZoomItem = Object.subClass({
                 var jImage = $(image[0]);
                 that.Overlap = jImage.attr('Overlap');
             },
-            complete: function(jqXHR, textStatus) {
+            complete: function(jqXHR, status) {
                 //that._items.push(new PivotViewer.Views.DeepZoomItem(itemId, dzId, dzN, basePath, that._ratio, width, height, maxLevel, that._overlap));
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function(jqXHR, status, error) {
                 that.Overlap = 0;
             }
         });

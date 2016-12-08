@@ -402,9 +402,7 @@ PivotViewer.Views.TableView = PivotViewer.Views.IPivotViewerView.subClass({
 
         if (tableRows.length == 0) {
             if (showAllFacets == true) {
-                var msg = '';
-                msg = msg + 'There is not data to show about the selected items';
-                PivotViewer.Utils.ModalDialog(msg);
+                PivotViewer.Utils.ModalDialog('There is not data to show about the selected items');
                 return;
             } else {
                 this.CreateTable(currentFilter, "", sortKey, sortReverse)

@@ -68,18 +68,12 @@ PivotViewer.Views.SimpleImageController = PivotViewer.Views.IImageController.sub
                     that._items.push(new PivotViewer.Views.SimpleImageItem(images.ImageFiles[i], that._baseUrl, img.width, img.height, img));
                 }
             })
-            .fail(function(jqXHR, textStatus, errorThrown) {
+            .fail(function(jqXHR, status, error) {
                 //Make sure throbber is removed else everyone thinks the app is still running
                 $('.pv-loading').remove();
 
                 //Throw an alert so the user knows something is wrong
-                var msg = '';
-                msg = msg + 'Error loading image files<br><br>';
-                msg = msg + 'URL        : ' + this.url + '<br>';
-                msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
-                msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
-                msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                PivotViewer.Utils.ModalDialog(msg);
+                PivotViewer.Utils.AjaxErrorModalDialog(jqXHR, status, error, this.url, "Error loading image files");
             });
     },
 

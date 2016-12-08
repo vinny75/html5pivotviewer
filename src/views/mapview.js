@@ -569,15 +569,9 @@ that.inScopeLocList.push({id:itemId, loc:loc, title: title});
                 type: "GET",
                 url: nominatimUrl,
                 success: callbackFunction,
-                error: function(jqXHR, textStatus, errorThrown) {
+                error: function(jqXHR, status, error) {
                     //Throw an alert so the user knows something is wrong
-                    var msg = '';
-                    msg = msg + 'Error goecoding<br><br>';
-                    msg = msg + 'URL        : ' + nominatimUrl + '<br>';
-                    msg = msg + 'Status : ' + jqXHR.status + ' ' + errorThrown + '<br>';
-                    msg = msg + 'Details    : ' + jqXHR.responseText + '<br>';
-                    msg = msg + '<br>Pivot Viewer cannot continue until this problem is resolved<br>';
-                    PivotViewer.Utils.ModalDialog(msg); 
+                    PivotViewer.Utils.AjaxErrorModalDialog(jqXHR, status, error, nominatimUrl, "Error geocoding");
                 }
             });
         }
@@ -871,10 +865,7 @@ this.areaObj.setMap(this.map);
         this.DrawArea(selectedItemId);
     },
     ShowMapError: function () {
-        var msg = '';
-        msg = msg + 'The current data selection does not contain any location information that can be shown on a map<br><br>';
-        msg = msg + '<br>Choose a different view<br>';
-        PivotViewer.Utils.ModalDialog(msg); 
+        PivotViewer.Utils.ModalDialog('The current data selection does not contain any location information that can be shown on a map<br><br><br>Choose a different view<br>'); 
         return;
     },
     GetMapCentreX: function () {

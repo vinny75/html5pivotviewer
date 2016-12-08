@@ -118,12 +118,10 @@
 					throw "Collection loader does not inherit from PivotViewer.Models.Loaders.ICollectionLoader.";
 				}
 			} catch (err) {
-				var msg = '';
-				msg = msg + err;
 				//Make sure throbber is removed else everyone thinks the app is still running
 				$('.pv-loading').remove();
 
-				PivotViewer.Utils.ModalDialog(msg);
+				PivotViewer.Utils.ModalDialog(err);
 			}
 
 			//Image controller
@@ -686,9 +684,7 @@
                     viewPanel.append("<div class='pv-viewpanel-view' id='pv-viewpanel-view-" + i + "'>" + _views[i].GetUI() + "</div>");
                     $('.pv-toolbarpanel-viewcontrols').append("<div class='pv-toolbarpanel-view' id='pv-toolbarpanel-view-" + i + "' title='" + _views[i].GetViewName() + "'><img id='pv-viewpanel-view-" + i + "-image' src='" + _views[i].GetButtonImage() + "' alt='" + _views[i].GetViewName() + "' /></div>");
                 } else {
-                    var msg = '';
-                    msg = msg + 'View does not inherit from PivotViewer.Views.IPivotViewerView<br>';
-                    PivotViewer.Utils.ModalDialog(msg);
+                    PivotViewer.Utils.ModalDialog('View does not inherit from PivotViewer.Views.IPivotViewerView<br>');
                 }
             } catch (ex) {
                 alert(ex.Message);
